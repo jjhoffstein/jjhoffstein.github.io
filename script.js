@@ -1,3 +1,22 @@
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const tileSize = 20;
+let rows, cols;
+let snake;
+let food;
+let score = 0;
+let dx = 0;
+let dy = 0;
+let gameState = 'ready';
+let speed = 150;
+let loopId;
+
+function resetGame() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.width;
+    rows = canvas.height / tileSize;
+    cols = canvas.width / tileSize;
+=======
 // Basketball Snake Game Logic
 // Uses requestAnimationFrame for smooth gameplay and stores high scores in localStorage.
 
@@ -31,6 +50,21 @@ function resetGame() {
         { x: Math.floor(cols / 2) - 1, y: Math.floor(rows / 2) },
         { x: Math.floor(cols / 2) - 2, y: Math.floor(rows / 2) }
     ];
+    placeFood();
+    score = 0;
+    dx = 1;
+    dy = 0;
+    document.getElementById('score').textContent = 'Score: ' + score;
+    document.getElementById('gameOverMessage').classList.add('hidden');
+}
+
+function gameLoop() {
+    loopId = setTimeout(() => {
+        requestAnimationFrame(gameLoop);
+    }, speed);
+    update();
+    draw();
+=======
     dx = 1;
     dy = 0;
     score = 0;
@@ -74,6 +108,9 @@ function gameLoop(currentTime) {
 
 function update() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+    // wall collision
+    if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+
     // check collisions with walls or self
     if (
         head.x < 0 || head.y < 0 ||
@@ -86,8 +123,11 @@ function update() {
     snake.unshift(head);
     if (head.x === food.x && head.y === food.y) {
         score++;
+        document.getElementById('score').textContent = 'Score: ' + score;
+
         if (score % 5 === 0 && speed > 60) speed -= 10; // speed up slowly
         updateScore();
+
         placeFood();
     } else {
         snake.pop();
@@ -96,6 +136,11 @@ function update() {
 
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // draw snake
+    ctx.fillStyle = 'orange';
+    ctx.strokeStyle = 'black';
+    snake.forEach((seg, index) => {
+
     ctx.fillStyle = 'orange';
     ctx.strokeStyle = 'black';
     snake.forEach(seg => {
@@ -104,6 +149,7 @@ function draw() {
         ctx.fill();
         ctx.stroke();
     });
+    // food
 
     ctx.fillStyle = '#ff5722';
     ctx.beginPath();
@@ -112,6 +158,18 @@ function draw() {
 }
 
 function placeFood() {
+    food = {
+        x: Math.floor(Math.random() * cols),
+        y: Math.floor(Math.random() * rows)
+    };
+    // ensure not on snake
+    if (snake.some(seg => seg.x === food.x && seg.y === food.y)) {
+        placeFood();
+    }
+}
+
+function changeDirection(newDx, newDy) {
+    if (-newDx === dx && -newDy === dy) return; // prevent reverse
     do {
         food.x = Math.floor(Math.random() * cols);
         food.y = Math.floor(Math.random() * rows);
@@ -125,6 +183,44 @@ function changeDirection(newDx, newDy) {
 }
 
 function endGame() {
+    clearTimeout(loopId);
+    document.getElementById('gameOverMessage').classList.remove('hidden');
+    document.getElementById('startRestartButton').textContent = 'Restart Game';
+    document.getElementById('startRestartButton').classList.remove('hidden');
+    gameState = 'gameOver';
+}
+
+window.addEventListener('keydown', e => {
+    if (e.key === 'ArrowUp') changeDirection(0, -1);
+    if (e.key === 'ArrowDown') changeDirection(0, 1);
+    if (e.key === 'ArrowLeft') changeDirection(-1, 0);
+    if (e.key === 'ArrowRight') changeDirection(1, 0);
+});
+
+document.getElementById('touchControls').addEventListener('click', e => {
+    if (e.target.dataset.dir) {
+        if (e.target.dataset.dir === 'up') changeDirection(0, -1);
+        if (e.target.dataset.dir === 'down') changeDirection(0, 1);
+        if (e.target.dataset.dir === 'left') changeDirection(-1, 0);
+        if (e.target.dataset.dir === 'right') changeDirection(1, 0);
+    }
+});
+
+document.getElementById('startRestartButton').addEventListener('click', () => {
+    if (gameState !== 'playing') {
+        resetGame();
+        document.getElementById('startRestartButton').classList.add('hidden');
+        gameState = 'playing';
+        gameLoop();
+    }
+});
+
+window.addEventListener('resize', () => {
+    if (gameState !== 'playing') {
+        resetGame();
+    }
+});
+resetGame();
     gameState = 'gameOver';
     if (score > highScore) {
         highScore = score;
