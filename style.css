@@ -1,0 +1,45 @@
+body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #1c1c1c, #111);
+}
+
+/* court-style background for the game container */
+#game-container {
+    background: repeating-linear-gradient(
+        90deg,
+        #d6ae7b 0 10px,
+        #c69c6d 10px 20px
+    );
+    position: relative;
+}
+
+/* canvas should fill the container */
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* scoreboard text styling */
+#score,
+#highScore {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    text-shadow: 0 0 4px #000;
+}
+
+/* orange basketball look for snake segments */
+.snake {
+    fill: #ff8c00;
+    stroke: #000;
+}
+
+.food {
+    fill: #ff5722;
+}
+
+/* shiny gradient button */
+#startRestartButton {
+    background: linear-gradient(135deg, #ff7f50, #ff4500);
+}
