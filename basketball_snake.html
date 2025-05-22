@@ -4,11 +4,17 @@
         html5up.net | @ajlkn
         Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<html>
+<html lang="en">
     <head>
         <title>Basketball Snake Game - JJ Hoffstein Basketball Portfolio</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <meta name="description" content="Play Hoops Havoc: An AI-powered basketball snake game. Test your skills and compete for the highest score!" />
+        <meta name="theme-color" content="#1a202c" />
+        <meta property="og:title" content="Hoops Havoc: The AI-Powered Snake Challenge" />
+        <meta property="og:description" content="Play Hoops Havoc: An AI-powered basketball snake game. Test your skills and compete for the highest score!" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://jjhoffstein.github.io/basketball_snake.html" />
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -63,26 +69,85 @@
                 <!-- Main -->
                     <div id="main">
                         <div class="inner text-center">
-                            <h1>Hoops Havoc: The AI-Powered Snake Challenge!</h1>
+                            <h1 class="text-4xl font-bold mb-8">Hoops Havoc: The AI-Powered Snake Challenge!</h1>
+                            
+                            <div class="max-w-2xl mx-auto mb-8 text-lg">
+                                <p class="mb-4">Guide your basketball snake to collect orange basketballs and grow longer. Avoid hitting the walls or yourself!</p>
+                                <button id="howToPlayButton" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg text-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50 mb-4">How to Play</button>
+                            </div>
 
-                            <div id="game-container" class="relative aspect-square max-w-md mx-auto md:max-w-lg lg:max-w-xl bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
-                                <canvas id="gameCanvas"></canvas>
-                                <div id="score" class="absolute top-4 left-4 text-white text-2xl font-bold">Score: 0</div>
-                                <div id="lives" class="absolute top-4 left-1/2 -translate-x-1/2 text-white text-2xl font-bold">Lives: 3</div>
-                                <div id="highScore" class="absolute top-4 right-4 text-white text-2xl font-bold">High Score: 0</div>
-                                <button id="startRestartButton" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out">Restart Game</button>
-                                <div id="gameOverMessage" class="absolute left-1/2 -translate-x-1/2 text-red-500 text-4xl font-bold hidden" style="top:35%;">Game Over!</div>
+                            <div id="game-container" class="relative aspect-square max-w-md mx-auto md:max-w-lg lg:max-w-xl bg-gray-800 rounded-lg shadow-2xl overflow-hidden" role="application" aria-label="Basketball Snake Game">
+                                <canvas id="gameCanvas" class="w-full h-full"></canvas>
+                                <div id="score" class="absolute top-4 left-4 text-white text-2xl font-bold" aria-live="polite">Score: 0</div>
+                                <div id="lives" class="absolute top-4 left-1/2 -translate-x-1/2 text-white text-2xl font-bold" aria-live="polite">Lives: 3</div>
+                                <div id="highScore" class="absolute top-4 right-4 text-white text-2xl font-bold" aria-live="polite">High Score: 0</div>
+                                <button id="startRestartButton" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50" aria-label="Start Game">Start Game</button>
+                                <div id="gameOverMessage" class="absolute left-1/2 -translate-x-1/2 text-red-500 text-4xl font-bold hidden" style="top:35%;" aria-live="assertive">Game Over!</div>
+                                <div id="loadingMessage" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-xl hidden">Loading game...</div>
+                                <div id="countdown" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-6xl font-bold hidden">3</div>
+                                <div id="pauseOverlay" class="absolute inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center">
+                                    <div class="text-white text-4xl font-bold">PAUSED</div>
+                                </div>
 
-                                <div id="touchControls" class="md:hidden absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-32 grid grid-cols-3 grid-rows-3 gap-1 opacity-70">
-                                    <button data-dir="up" class="col-start-2 bg-gray-700 text-white rounded">▲</button>
-                                    <button data-dir="left" class="row-start-2 bg-gray-700 text-white rounded">◀</button>
-                                    <button data-dir="right" class="row-start-2 col-start-3 bg-gray-700 text-white rounded">▶</button>
-                                    <button data-dir="down" class="row-start-3 col-start-2 bg-gray-700 text-white rounded">▼</button>
+                                <div class="absolute top-4 right-4 flex gap-2">
+                                    <button id="soundToggle" class="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400" aria-label="Toggle Sound">
+                                        <span class="sound-on">🔊</span>
+                                        <span class="sound-off hidden">🔇</span>
+                                    </button>
+                                    <button id="pauseButton" class="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 hidden" aria-label="Pause Game">
+                                        <span class="pause-icon">⏸</span>
+                                        <span class="resume-icon hidden">▶</span>
+                                    </button>
+                                </div>
+
+                                <div id="touchControls" class="md:hidden absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-32 grid grid-cols-3 grid-rows-3 gap-1 opacity-70" role="group" aria-label="Touch Controls">
+                                    <button data-dir="up" class="col-start-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-400 active:bg-orange-500 transition-colors" aria-label="Move Up">▲</button>
+                                    <button data-dir="left" class="row-start-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-400 active:bg-orange-500 transition-colors" aria-label="Move Left">◀</button>
+                                    <button data-dir="right" class="row-start-2 col-start-3 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-400 active:bg-orange-500 transition-colors" aria-label="Move Right">▶</button>
+                                    <button data-dir="down" class="row-start-3 col-start-2 bg-gray-700 text-white rounded focus:outline-none focus:ring-2 focus:ring-orange-400 active:bg-orange-500 transition-colors" aria-label="Move Down">▼</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                <!-- How to Play Modal -->
+                <div id="howToPlayModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                    <div class="bg-gray-800 p-6 rounded-lg max-w-2xl mx-4">
+                        <h2 class="text-2xl font-bold mb-4">How to Play</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Desktop Controls:</h3>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>↑ Move Up</li>
+                                    <li>↓ Move Down</li>
+                                    <li>← Move Left</li>
+                                    <li>→ Move Right</li>
+                                    <li>P - Pause Game</li>
+                                    <li>M - Toggle Sound</li>
+                                    <li>Space - Start/Restart</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-xl font-bold mb-2">Mobile Controls:</h3>
+                                <ul class="list-disc list-inside space-y-2">
+                                    <li>Use the on-screen arrow buttons</li>
+                                    <li>Tap and hold for continuous movement</li>
+                                    <li>Swipe in any direction to move</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="mt-6">
+                            <h3 class="text-xl font-bold mb-2">Game Rules:</h3>
+                            <ul class="list-disc list-inside space-y-2">
+                                <li>Collect orange basketballs to grow and score points</li>
+                                <li>Avoid hitting the walls or yourself</li>
+                                <li>You have 3 lives</li>
+                                <li>Game speed increases as you score more points</li>
+                            </ul>
+                        </div>
+                        <button id="closeHowToPlay" class="mt-6 bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50">Got it!</button>
+                    </div>
+                </div>
 
                 <!-- Footer -->
                     <footer id="footer">
@@ -90,9 +155,9 @@
                             <section>
 
                                 <ul class="icons">
-                                    <li><a href="https://www.twitter.com/jjhoffstein" class="icon brands style2 fa-twitter"><span class="label">Twitter</span></a></li>
-                                    <li><a href="tel:16107313122" class="icon solid style2 fa-phone"><span class="label">Phone</span></a></li>
-                                    <li><a href="mailto:jjhoffstein@gmail.com" class="icon solid style2 fa-envelope"><span class="label">Email</span></a></li>
+                                    <li><a href="https://www.twitter.com/jjhoffstein" class="icon brands style2 fa-twitter" aria-label="Twitter"><span class="label">Twitter</span></a></li>
+                                    <li><a href="tel:16107313122" class="icon solid style2 fa-phone" aria-label="Phone"><span class="label">Phone</span></a></li>
+                                    <li><a href="mailto:jjhoffstein@gmail.com" class="icon solid style2 fa-envelope" aria-label="Email"><span class="label">Email</span></a></li>
                                 </ul>
                             </section>
                             <ul class="copyright">
