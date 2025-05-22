@@ -31,7 +31,7 @@ function init() {
     document.getElementById('score').textContent = 'Score: ' + score;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     document.getElementById('gameOverMessage').classList.add('hidden');
-    document.getElementById('startRestartButton').classList.add('hidden');
+    document.getElementById('startRestartButton').classList.remove('hidden');
 }
 
 function gameLoop() {
@@ -134,15 +134,14 @@ document.getElementById('touchControls').addEventListener('click', e => {
 document.getElementById('startRestartButton').addEventListener('click', () => {
     if (gameState === 'ready') {
         init();
-        gameState = 'playing';
-        gameLoop();
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
         init();
-        gameState = 'playing';
-        gameLoop();
     }
+    document.getElementById('startRestartButton').classList.add('hidden');
+    gameState = 'playing';
+    gameLoop();
 });
 
 window.addEventListener('resize', () => {
