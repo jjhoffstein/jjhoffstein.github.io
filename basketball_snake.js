@@ -12,7 +12,7 @@ let highScore = parseInt(localStorage.getItem('basketballSnakeHighScore')) || 0;
 let lives = 3;
 let dx = 0;
 let dy = 0;
-let gameState = 'ready';
+let gameState = 'playing';
 let speed = 150;
 let loopId;
 
@@ -62,14 +62,7 @@ function setup() {
     document.getElementById('startRestartButton').classList.remove('hidden');
     document.getElementById('startRestartButton').textContent = 'Start Game';
     document.getElementById('gameOverMessage').classList.add('hidden');
-    gameState = 'ready';
-}
-
-function startGame() {
-    init();
-    document.getElementById('startRestartButton').classList.add('hidden');
-    gameState = 'playing';
-    gameLoop();
+    document.getElementById('restartButton').classList.add('hidden');
 
 }
 
@@ -143,14 +136,14 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        restartButton.textContent = 'Continue';
-        gameOverMessage.classList.add('hidden');
-        overlay.classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Continue';
+        document.getElementById('restartButton').classList.remove('hidden');
         gameState = 'ready';
     } else {
-        gameOverMessage.classList.remove('hidden');
-        restartButton.textContent = 'Restart Game';
-        overlay.classList.remove('hidden');
+        document.getElementById('gameOverMessage').classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Restart Game';
+        document.getElementById('restartButton').classList.remove('hidden');
+
         gameState = 'gameOver';
     }
 }
@@ -171,9 +164,8 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
+document.getElementById('restartButton').addEventListener('click', () => {
 
-restartButton.addEventListener('click', () => {
-    overlay.classList.add('hidden');
     if (gameState === 'ready') {
         startGame();
     } else if (gameState === 'gameOver') {
@@ -193,5 +185,6 @@ window.addEventListener('resize', () => {
     }
 });
 
-setup();
+init();
+gameLoop();
 
