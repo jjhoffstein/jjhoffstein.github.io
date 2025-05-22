@@ -16,3 +16,9 @@ body {
 .food {
     fill: #ff5722;
 }
+#startRestartButton {
+    top: 65% !important;
+}
+#gameOverMessage {
+    top: 35% !important;
+}
