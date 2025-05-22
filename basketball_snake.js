@@ -152,3 +152,5 @@ window.addEventListener('resize', () => {
 });
 
 init();
+gameState = 'playing';
+gameLoop();
