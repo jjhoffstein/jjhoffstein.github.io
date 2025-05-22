@@ -151,4 +151,7 @@ window.addEventListener('resize', () => {
     }
 });
 
+// Start the game automatically when the script loads
 init();
+gameState = 'playing';
+gameLoop();
