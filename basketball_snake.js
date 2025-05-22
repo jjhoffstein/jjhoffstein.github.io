@@ -1,5 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const restartButton = document.getElementById('restartButton');
+const gameOverMessage = document.getElementById('gameOverMessage');
 let tileSize = 20;
 let rows, cols;
 let snake;
@@ -30,8 +33,8 @@ function init() {
     dy = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
-    document.getElementById('gameOverMessage').classList.add('hidden');
-    document.getElementById('startRestartButton').classList.add('hidden');
+    gameOverMessage.classList.add('hidden');
+    overlay.classList.add('hidden');
 }
 
 function gameLoop() {
@@ -104,13 +107,14 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        document.getElementById('startRestartButton').textContent = 'Continue';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        restartButton.textContent = 'Continue';
+        gameOverMessage.classList.add('hidden');
+        overlay.classList.remove('hidden');
         gameState = 'ready';
     } else {
-        document.getElementById('gameOverMessage').classList.remove('hidden');
-        document.getElementById('startRestartButton').textContent = 'Restart Game';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        gameOverMessage.classList.remove('hidden');
+        restartButton.textContent = 'Restart Game';
+        overlay.classList.remove('hidden');
         gameState = 'gameOver';
     }
 }
@@ -131,7 +135,9 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
-document.getElementById('startRestartButton').addEventListener('click', () => {
+
+restartButton.addEventListener('click', () => {
+    overlay.classList.add('hidden');
     if (gameState === 'ready') {
         init();
         gameState = 'playing';
@@ -152,3 +158,5 @@ window.addEventListener('resize', () => {
 });
 
 init();
+gameState = 'playing';
+gameLoop();
