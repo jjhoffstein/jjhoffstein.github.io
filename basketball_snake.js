@@ -1,5 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const restartButton = document.getElementById('restartButton');
+const gameOverMessage = document.getElementById('gameOverMessage');
 let tileSize = 20;
 let rows, cols;
 let snake;
@@ -12,6 +15,19 @@ let dy = 0;
 let gameState = 'ready';
 let speed = 150;
 let loopId;
+
+function setup() {
+    document.getElementById('score').textContent = 'Score: 0';
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
+    document.getElementById('startRestartButton').textContent = 'Start Game';
+    document.getElementById('startRestartButton').classList.remove('hidden');
+    document.getElementById('gameOverMessage').classList.add('hidden');
+}
+
+// show stored high score on load
+document.getElementById('highScore').textContent =
+    'High Score: ' + highScore;
 
 function init() {
     canvas.width = canvas.parentElement.clientWidth;
@@ -30,8 +46,9 @@ function init() {
     dy = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    gameOverMessage.classList.add('hidden');
+    overlay.classList.add('hidden');
     document.getElementById('gameOverMessage').classList.add('hidden');
-    document.getElementById('startRestartButton').classList.add('hidden');
 }
 
 function gameLoop() {
@@ -104,13 +121,14 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        document.getElementById('startRestartButton').textContent = 'Continue';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        restartButton.textContent = 'Continue';
+        gameOverMessage.classList.add('hidden');
+        overlay.classList.remove('hidden');
         gameState = 'ready';
     } else {
-        document.getElementById('gameOverMessage').classList.remove('hidden');
-        document.getElementById('startRestartButton').textContent = 'Restart Game';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        gameOverMessage.classList.remove('hidden');
+        restartButton.textContent = 'Restart Game';
+        overlay.classList.remove('hidden');
         gameState = 'gameOver';
     }
 }
@@ -131,15 +149,19 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
-document.getElementById('startRestartButton').addEventListener('click', () => {
+
+restartButton.addEventListener('click', () => {
+    overlay.classList.add('hidden');
     if (gameState === 'ready') {
         init();
+        document.getElementById('startRestartButton').classList.add('hidden');
         gameState = 'playing';
         gameLoop();
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
         init();
+        document.getElementById('startRestartButton').classList.add('hidden');
         gameState = 'playing';
         gameLoop();
     }
@@ -151,6 +173,9 @@ window.addEventListener('resize', () => {
     }
 });
 
+setup();
+=======
+// Start the game automatically when the script loads
 init();
 gameState = 'playing';
 gameLoop();
