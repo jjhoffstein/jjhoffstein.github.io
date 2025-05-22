@@ -41,15 +41,35 @@ function init() {
     ];
     placeFood();
     score = 0;
-    document.getElementById('lives').textContent = 'Lives: ' + lives;
     dx = 1;
     dy = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     gameOverMessage.classList.add('hidden');
     overlay.classList.add('hidden');
     document.getElementById('gameOverMessage').classList.add('hidden');
+}
+
+function setup() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.width;
+    rows = canvas.height / tileSize;
+    cols = canvas.width / tileSize;
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
+    document.getElementById('score').textContent = 'Score: 0';
     document.getElementById('startRestartButton').classList.remove('hidden');
+    document.getElementById('startRestartButton').textContent = 'Start Game';
+    document.getElementById('gameOverMessage').classList.add('hidden');
+    gameState = 'ready';
+}
+
+function startGame() {
+    init();
+    document.getElementById('startRestartButton').classList.add('hidden');
+    gameState = 'playing';
+    gameLoop();
 
 }
 
@@ -155,12 +175,11 @@ document.getElementById('touchControls').addEventListener('click', e => {
 restartButton.addEventListener('click', () => {
     overlay.classList.add('hidden');
     if (gameState === 'ready') {
-        init();
-
+        startGame();
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
-        init();
+        startGame();
 
     }
     document.getElementById('startRestartButton').classList.add('hidden');
@@ -175,7 +194,4 @@ window.addEventListener('resize', () => {
 });
 
 setup();
-// Start the game automatically when the script loads
-init();
-gameState = 'playing';
-gameLoop();
+
