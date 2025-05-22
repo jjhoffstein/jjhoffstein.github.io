@@ -18,6 +18,8 @@
         <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
     </head>
     <body class="is-preload">
+
+    <body class="is-preload bg-gray-900 text-gray-100 font-inter">
         <!-- Wrapper -->
             <div id="wrapper">
 
@@ -66,6 +68,9 @@
                                 <h1 class="text-5xl font-extrabold mb-4 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-transparent bg-clip-text">Hoops Havoc: The AI-Powered Snake Challenge!</h1>
                                 <p class="text-lg">Welcome to Hoops Havoc! This isn't just any retro game; it's a demonstration of how AI can be leveraged to create engaging and cool interactive experiences. I built this to showcase the creative possibilities that open up when human ingenuity meets artificial intelligence. Enjoy the game and imagine the potential!</p>
                             </section>
+                        <div class="inner text-center">
+                            <h1>Hoops Havoc: The AI-Powered Snake Challenge!</h1>
+                            <p>Welcome to Hoops Havoc! This isn't just any retro game; it's a demonstration of how AI can be leveraged to create engaging and cool interactive experiences. I built this to showcase the creative possibilities that open up when human ingenuity meets artificial intelligence. Enjoy the game and imagine the potential!</p>
 
                             <div id="game-container" class="relative aspect-square max-w-md mx-auto md:max-w-lg lg:max-w-xl bg-gray-800 rounded-lg shadow-2xl overflow-hidden">
                                 <canvas id="gameCanvas"></canvas>
@@ -76,6 +81,8 @@
                                     <div id="gameOverMessage" class="text-red-500 text-4xl font-bold hidden">Game Over!</div>
                                     <button id="restartButton" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out">Restart Game</button>
                                 </div>
+                                <button id="startRestartButton" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out">Start Game</button>
+                                <div id="gameOverMessage" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500 text-4xl font-bold hidden">Game Over!</div>
                                 <div id="touchControls" class="md:hidden absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-32 grid grid-cols-3 grid-rows-3 gap-1 opacity-70">
                                     <button data-dir="up" class="col-start-2 bg-gray-700 text-white rounded">▲</button>
                                     <button data-dir="left" class="row-start-2 bg-gray-700 text-white rounded">◀</button>

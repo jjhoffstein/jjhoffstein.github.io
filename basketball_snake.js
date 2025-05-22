@@ -16,6 +16,10 @@ let gameState = 'ready';
 let speed = 150;
 let loopId;
 
+// show stored high score on load
+document.getElementById('highScore').textContent =
+    'High Score: ' + highScore;
+
 function init() {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.width;
@@ -35,6 +39,7 @@ function init() {
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     gameOverMessage.classList.add('hidden');
     overlay.classList.add('hidden');
+    document.getElementById('gameOverMessage').classList.add('hidden');
 }
 
 function gameLoop() {
@@ -140,12 +145,14 @@ restartButton.addEventListener('click', () => {
     overlay.classList.add('hidden');
     if (gameState === 'ready') {
         init();
+        document.getElementById('startRestartButton').classList.add('hidden');
         gameState = 'playing';
         gameLoop();
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
         init();
+        document.getElementById('startRestartButton').classList.add('hidden');
         gameState = 'playing';
         gameLoop();
     }
@@ -157,6 +164,7 @@ window.addEventListener('resize', () => {
     }
 });
 
+// Start the game automatically when the script loads
 init();
 gameState = 'playing';
 gameLoop();
