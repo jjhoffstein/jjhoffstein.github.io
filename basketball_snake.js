@@ -13,6 +13,15 @@ let gameState = 'ready';
 let speed = 150;
 let loopId;
 
+function setup() {
+    document.getElementById('score').textContent = 'Score: 0';
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
+    document.getElementById('startRestartButton').textContent = 'Start Game';
+    document.getElementById('startRestartButton').classList.remove('hidden');
+    document.getElementById('gameOverMessage').classList.add('hidden');
+}
+
 function init() {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.width;
@@ -151,4 +160,4 @@ window.addEventListener('resize', () => {
     }
 });
 
-init();
+setup();
