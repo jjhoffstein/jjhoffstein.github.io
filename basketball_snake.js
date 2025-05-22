@@ -1,5 +1,8 @@
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
+const overlay = document.getElementById('overlay');
+const restartButton = document.getElementById('restartButton');
+const gameOverMessage = document.getElementById('gameOverMessage');
 let tileSize = 20;
 let rows, cols;
 let snake;
@@ -9,9 +12,22 @@ let highScore = parseInt(localStorage.getItem('basketballSnakeHighScore')) || 0;
 let lives = 3;
 let dx = 0;
 let dy = 0;
-let gameState = 'ready';
+let gameState = 'playing';
 let speed = 150;
 let loopId;
+
+function setup() {
+    document.getElementById('score').textContent = 'Score: 0';
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
+    document.getElementById('startRestartButton').textContent = 'Start Game';
+    document.getElementById('startRestartButton').classList.remove('hidden');
+    document.getElementById('gameOverMessage').classList.add('hidden');
+}
+
+// show stored high score on load
+document.getElementById('highScore').textContent =
+    'High Score: ' + highScore;
 
 function init() {
     canvas.width = canvas.parentElement.clientWidth;
@@ -25,13 +41,29 @@ function init() {
     ];
     placeFood();
     score = 0;
-    document.getElementById('lives').textContent = 'Lives: ' + lives;
     dx = 1;
     dy = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    gameOverMessage.classList.add('hidden');
+    overlay.classList.add('hidden');
     document.getElementById('gameOverMessage').classList.add('hidden');
-    document.getElementById('startRestartButton').classList.add('hidden');
+}
+
+function setup() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = canvas.width;
+    rows = canvas.height / tileSize;
+    cols = canvas.width / tileSize;
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+    document.getElementById('lives').textContent = 'Lives: ' + lives;
+    document.getElementById('score').textContent = 'Score: 0';
+    document.getElementById('startRestartButton').classList.remove('hidden');
+    document.getElementById('startRestartButton').textContent = 'Start Game';
+    document.getElementById('gameOverMessage').classList.add('hidden');
+    document.getElementById('restartButton').classList.add('hidden');
+
 }
 
 function gameLoop() {
@@ -104,13 +136,14 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        document.getElementById('startRestartButton').textContent = 'Continue';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Continue';
+        document.getElementById('restartButton').classList.remove('hidden');
         gameState = 'ready';
     } else {
         document.getElementById('gameOverMessage').classList.remove('hidden');
-        document.getElementById('startRestartButton').textContent = 'Restart Game';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Restart Game';
+        document.getElementById('restartButton').classList.remove('hidden');
+
         gameState = 'gameOver';
     }
 }
@@ -131,18 +164,19 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
-document.getElementById('startRestartButton').addEventListener('click', () => {
+document.getElementById('restartButton').addEventListener('click', () => {
+
     if (gameState === 'ready') {
-        init();
-        gameState = 'playing';
-        gameLoop();
+        startGame();
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
-        init();
-        gameState = 'playing';
-        gameLoop();
+        startGame();
+
     }
+    document.getElementById('startRestartButton').classList.add('hidden');
+    gameState = 'playing';
+    gameLoop();
 });
 
 window.addEventListener('resize', () => {
@@ -154,3 +188,4 @@ window.addEventListener('resize', () => {
 init();
 gameState = 'playing';
 gameLoop();
+
