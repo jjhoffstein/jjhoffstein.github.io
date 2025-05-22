@@ -9,7 +9,7 @@ let highScore = parseInt(localStorage.getItem('basketballSnakeHighScore')) || 0;
 let lives = 3;
 let dx = 0;
 let dy = 0;
-let gameState = 'ready';
+let gameState = 'playing';
 let speed = 150;
 let loopId;
 
@@ -31,7 +31,7 @@ function init() {
     document.getElementById('score').textContent = 'Score: ' + score;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     document.getElementById('gameOverMessage').classList.add('hidden');
-    document.getElementById('startRestartButton').classList.add('hidden');
+    document.getElementById('restartButton').classList.add('hidden');
 }
 
 function gameLoop() {
@@ -104,13 +104,13 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        document.getElementById('startRestartButton').textContent = 'Continue';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Continue';
+        document.getElementById('restartButton').classList.remove('hidden');
         gameState = 'ready';
     } else {
         document.getElementById('gameOverMessage').classList.remove('hidden');
-        document.getElementById('startRestartButton').textContent = 'Restart Game';
-        document.getElementById('startRestartButton').classList.remove('hidden');
+        document.getElementById('restartButton').textContent = 'Restart Game';
+        document.getElementById('restartButton').classList.remove('hidden');
         gameState = 'gameOver';
     }
 }
@@ -131,7 +131,7 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
-document.getElementById('startRestartButton').addEventListener('click', () => {
+document.getElementById('restartButton').addEventListener('click', () => {
     if (gameState === 'ready') {
         init();
         gameState = 'playing';
@@ -152,3 +152,4 @@ window.addEventListener('resize', () => {
 });
 
 init();
+gameLoop();
