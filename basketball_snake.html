@@ -17,6 +17,8 @@
         <link rel="stylesheet" href="basketball_snake.css" />
         <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
     </head>
+    <body class="is-preload">
+
     <body class="is-preload bg-gray-900 text-gray-100 font-inter">
         <!-- Wrapper -->
             <div id="wrapper">
@@ -61,6 +63,11 @@
 
                 <!-- Main -->
                     <div id="main">
+                        <div class="inner">
+                            <section class="mb-8 text-center">
+                                <h1 class="text-5xl font-extrabold mb-4 bg-gradient-to-r from-orange-500 via-red-500 to-pink-500 text-transparent bg-clip-text">Hoops Havoc: The AI-Powered Snake Challenge!</h1>
+                                <p class="text-lg">Welcome to Hoops Havoc! This isn't just any retro game; it's a demonstration of how AI can be leveraged to create engaging and cool interactive experiences. I built this to showcase the creative possibilities that open up when human ingenuity meets artificial intelligence. Enjoy the game and imagine the potential!</p>
+                            </section>
                         <div class="inner text-center">
                             <h1>Hoops Havoc: The AI-Powered Snake Challenge!</h1>
                             <p>Welcome to Hoops Havoc! This isn't just any retro game; it's a demonstration of how AI can be leveraged to create engaging and cool interactive experiences. I built this to showcase the creative possibilities that open up when human ingenuity meets artificial intelligence. Enjoy the game and imagine the potential!</p>
@@ -70,6 +77,10 @@
                                 <div id="score" class="absolute top-4 left-4 text-white text-2xl font-bold">Score: 0</div>
                                 <div id="lives" class="absolute top-4 left-1/2 -translate-x-1/2 text-white text-2xl font-bold">Lives: 3</div>
                                 <div id="highScore" class="absolute top-4 right-4 text-white text-2xl font-bold">High Score: 0</div>
+                                <div id="overlay" class="absolute inset-0 flex flex-col items-center justify-center space-y-4 hidden">
+                                    <div id="gameOverMessage" class="text-red-500 text-4xl font-bold hidden">Game Over!</div>
+                                    <button id="restartButton" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out">Restart Game</button>
+                                </div>
                                 <button id="startRestartButton" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-lg text-xl shadow-md transition duration-150 ease-in-out">Start Game</button>
                                 <div id="gameOverMessage" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-red-500 text-4xl font-bold hidden">Game Over!</div>
                                 <div id="touchControls" class="md:hidden absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-32 grid grid-cols-3 grid-rows-3 gap-1 opacity-70">
