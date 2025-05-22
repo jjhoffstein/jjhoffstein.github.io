@@ -49,6 +49,8 @@ function init() {
     gameOverMessage.classList.add('hidden');
     overlay.classList.add('hidden');
     document.getElementById('gameOverMessage').classList.add('hidden');
+    document.getElementById('startRestartButton').classList.remove('hidden');
+
 }
 
 function gameLoop() {
@@ -154,17 +156,16 @@ restartButton.addEventListener('click', () => {
     overlay.classList.add('hidden');
     if (gameState === 'ready') {
         init();
-        document.getElementById('startRestartButton').classList.add('hidden');
-        gameState = 'playing';
-        gameLoop();
+
     } else if (gameState === 'gameOver') {
         lives = 3;
         score = 0;
         init();
-        document.getElementById('startRestartButton').classList.add('hidden');
-        gameState = 'playing';
-        gameLoop();
+
     }
+    document.getElementById('startRestartButton').classList.add('hidden');
+    gameState = 'playing';
+    gameLoop();
 });
 
 window.addEventListener('resize', () => {
@@ -174,7 +175,6 @@ window.addEventListener('resize', () => {
 });
 
 setup();
-=======
 // Start the game automatically when the script loads
 init();
 gameState = 'playing';
