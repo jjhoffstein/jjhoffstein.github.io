@@ -1,8 +1,13 @@
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 #game-container {
     background: radial-gradient(#76522b, #3d2914);
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    aspect-ratio: 1;
 }
 #gameCanvas {
     display: block;
@@ -21,4 +26,92 @@ body {
 }
 #gameOverMessage {
     top: 35% !important;
+}
+
+.game-description {
+    text-align: center;
+    margin-bottom: 2em;
+}
+
+.game-description p {
+    margin-bottom: 1em;
+}
+
+.game-controls {
+    position: absolute;
+    top: 1em;
+    left: 1em;
+    display: flex;
+    gap: 1em;
+    color: white;
+}
+
+#touchControls {
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5em;
+    padding: 1em;
+}
+
+#touchControls button {
+    width: 3em;
+    height: 3em;
+    font-size: 1.5em;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 0.5em;
+    color: white;
+    cursor: pointer;
+}
+
+#touchControls button:active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+#howToPlayModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #1a202c;
+    padding: 2em;
+    border-radius: 0.5em;
+    max-width: 600px;
+    width: 90%;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    margin: 1em 0;
+}
+
+@media (max-width: 768px) {
+    .controls-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #touchControls {
+        display: grid;
+    }
+}
+
+@media (min-width: 769px) {
+    #touchControls {
+        display: none;
+    }
 }

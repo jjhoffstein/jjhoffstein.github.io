@@ -19,12 +19,13 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
         <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="stylesheet" href="assets/css/fontawesome-all.min.css" />
         <link rel="stylesheet" href="assets/css/main.css" />
         <link rel="stylesheet" href="basketball_snake.css" />
         <noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
     </head>
 
-    <body class="is-preload bg-gray-900 text-gray-100 font-inter">
+    <body class="is-preload">
         <!-- Wrapper -->
             <div id="wrapper">
 
@@ -60,7 +61,6 @@
                             <li><a href="moreyball.html">Moreyball</a></li>
                             <li><a href="gen_z.html">Gen Z</a></li>
                             <li><a href="book_pantheon.html">Book Pantheon</a></li>
-                            <li><a href="lessons.html">Individual & Group Lessons</a></li>
                             <li><a href="basketball_analytics.html">Basketball Analytics</a></li>
                             <li><a href="basketball_snake.html">Basketball Snake Game</a></li>
                         </ul>
@@ -111,7 +111,7 @@
                     </div>
 
                 <!-- How to Play Modal -->
-                <div id="howToPlayModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+                <div id="howToPlayModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50" style="display: none;">
                     <div class="bg-gray-800 p-6 rounded-lg max-w-2xl mx-4">
                         <h2 class="text-2xl font-bold mb-4">How to Play</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -153,7 +153,6 @@
                     <footer id="footer">
                         <div class="inner">
                             <section>
-
                                 <ul class="icons">
                                     <li><a href="https://www.twitter.com/jjhoffstein" class="icon brands style2 fa-twitter" aria-label="Twitter"><span class="label">Twitter</span></a></li>
                                     <li><a href="tel:16107313122" class="icon solid style2 fa-phone" aria-label="Phone"><span class="label">Phone</span></a></li>

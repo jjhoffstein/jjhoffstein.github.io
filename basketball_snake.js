@@ -313,13 +313,29 @@ soundToggle.addEventListener('click', toggleSound);
 
 // How to Play Modal
 howToPlayButton.addEventListener('click', () => {
+    howToPlayModal.style.display = 'flex';
     howToPlayModal.classList.remove('hidden');
-    howToPlayModal.classList.add('flex');
 });
 
 closeHowToPlay.addEventListener('click', () => {
+    howToPlayModal.style.display = 'none';
     howToPlayModal.classList.add('hidden');
-    howToPlayModal.classList.remove('flex');
+});
+
+// Close modal when clicking outside
+howToPlayModal.addEventListener('click', (e) => {
+    if (e.target === howToPlayModal) {
+        howToPlayModal.style.display = 'none';
+        howToPlayModal.classList.add('hidden');
+    }
+});
+
+// Close modal with Escape key
+window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && howToPlayModal.style.display !== 'none') {
+        howToPlayModal.style.display = 'none';
+        howToPlayModal.classList.add('hidden');
+    }
 });
 
 // Handle window resize
