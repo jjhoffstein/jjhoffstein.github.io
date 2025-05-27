@@ -1,3 +1,57 @@
+<style type="text/css">
+/* Styles for the menu itself - ensuring it's distinct */
+#menu {
+    background-color: #585858; /* _palette(fg) */
+    color: #ffffff; /* _palette(bg) */
+    font-family: 'Source Sans Pro', Helvetica, sans-serif; /* _font(family) */
+    font-weight: 300; /* _font(weight) */
+}
+
+/* Resetting/defining ul styles for the menu list */
+#menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 1em 0; /* Vertical padding for the whole list */
+}
+
+/* Styling for each list item */
+#menu li {
+    padding: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.15); /* Subtle top border, using rgba for white */
+}
+
+#menu li:first-child {
+    border-top: none;
+}
+
+/* Styling for the links within list items */
+#menu li a {
+    display: block;
+    padding: 0.8em 1.5em; /* Generous padding: 0.8em top/bottom, 1.5em left/right */
+    line-height: 1.6; /* Good line height for readability */
+    color: #ffffff !important; /* _palette(bg) - white text, !important to be sure */
+    text-decoration: none;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Hover state for links */
+#menu li a:hover {
+    color: #7ecaf6 !important; /* _palette(accent2) - light blue text */
+    background-color: rgba(255, 255, 255, 0.05); /* Very subtle white background tint on hover */
+}
+
+/* Active state for links (when clicked) */
+#menu li a:active {
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly more pronounced background tint */
+    color: #7ecaf6 !important; /* Keep text color same as hover */
+}
+
+/* Neutralize padding on the .inner div created by JS */
+#menu > .inner {
+    padding: 0 !important; 
+}
+</style>
+
 <!-- Menu -->
 					<nav id="menu">
 						<h2>Menu</h2>
