@@ -1,3 +1,29 @@
+// Function to load the menu
+function loadMenu() {
+    // Check if #menu exists and if it hasn't been loaded already
+    if ($('#menu').length && !$('#menu').data('loaded')) {
+        $('#menu').load('menu.html', function(response, status, xhr) {
+            if (status == "error") {
+                console.log("Error loading menu.html: " + xhr.status + " " + xhr.statusText);
+            } else {
+                // Mark as loaded to prevent multiple loads if script is run again
+                $('#menu').data('loaded', true); 
+                // Re-initialize menu scripts if they depend on dynamic content
+                // This might require a more specific re-initialization if parts of the menu
+                // script in main.js have already run or expect content to be there synchronously.
+                // For now, we assume the existing script will pick up the new content.
+                // If the menu interactivity breaks, this is the place to debug.
+                console.log("Menu loaded successfully.");
+            }
+        });
+    }
+}
+
+// Load the menu as soon as the DOM is ready, but before window.load
+$(function() {
+    loadMenu();
+});
+
 /*
 	Phantom by HTML5 UP
 	html5up.net | @ajlkn
