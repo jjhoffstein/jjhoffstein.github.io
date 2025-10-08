@@ -2,7 +2,12 @@
 function loadMenu() {
     // Check if #menu exists and if it hasn't been loaded already
     if ($('#menu').length && !$('#menu').data('loaded')) {
-        $('#menu').load('menu.html', function(response, status, xhr) {
+        // Ensure the inner wrapper exists so we don't clobber it during load
+        if (!$('#menu > .inner').length) {
+            $('#menu').wrapInner('<div class="inner"></div>');
+        }
+        var cacheBuster = 'v=' + Date.now();
+        $('#menu > .inner').load('menu.html?' + cacheBuster, function(response, status, xhr) {
             if (status == "error") {
                 console.log("Error loading menu.html: " + xhr.status + " " + xhr.statusText);
             } else {
