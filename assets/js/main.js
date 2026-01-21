@@ -1,34 +1,3 @@
-// Function to load the menu
-function loadMenu() {
-    // Check if #menu exists and if it hasn't been loaded already
-    if ($('#menu').length && !$('#menu').data('loaded')) {
-        // Ensure the inner wrapper exists so we don't clobber it during load
-        if (!$('#menu > .inner').length) {
-            $('#menu').wrapInner('<div class="inner"></div>');
-        }
-        var cacheBuster = 'v=' + Date.now();
-        $('#menu > .inner').load('menu.html?' + cacheBuster, function(response, status, xhr) {
-            if (status == "error") {
-                console.log("Error loading menu.html: " + xhr.status + " " + xhr.statusText);
-            } else {
-                // Mark as loaded to prevent multiple loads if script is run again
-                $('#menu').data('loaded', true); 
-                // Re-initialize menu scripts if they depend on dynamic content
-                // This might require a more specific re-initialization if parts of the menu
-                // script in main.js have already run or expect content to be there synchronously.
-                // For now, we assume the existing script will pick up the new content.
-                // If the menu interactivity breaks, this is the place to debug.
-                console.log("Menu loaded successfully.");
-            }
-        });
-    }
-}
-
-// Load the menu as soon as the DOM is ready, but before window.load
-$(function() {
-    loadMenu();
-});
-
 /*
 	Phantom by HTML5 UP
 	html5up.net | @ajlkn
@@ -62,13 +31,17 @@ $(function() {
 			$body.addClass('is-touch');
 
 	// Forms.
-		var $form = $('form');
+		function initForms($context) {
+			var $form = $context.find('form');
 
-		// Auto-resizing textareas.
+			// Auto-resizing textareas.
 			$form.find('textarea').each(function() {
 
-				var $this = $(this),
-					$wrapper = $('<div class="textarea-wrapper"></div>'),
+				var $this = $(this);
+
+				if ($this.parent().hasClass('textarea-wrapper')) return;
+
+				var $wrapper = $('<div class="textarea-wrapper"></div>'),
 					$submits = $this.find('input[type="submit"]');
 
 				$this
@@ -119,11 +92,16 @@ $(function() {
 							.css('overflow-y', 'auto');
 
 			});
+		}
+
+		initForms($body);
 
 	// Menu.
 		var $menu = $('#menu');
 
-		$menu.wrapInner('<div class="inner"></div>');
+		if ($menu.children('.inner').length == 0) {
+			$menu.wrapInner('<div class="inner"></div>');
+		}
 
 		$menu._locked = false;
 
@@ -212,5 +190,33 @@ $(function() {
 						$menu._hide();
 
 			});
+
+	// Function to load the menu
+	function loadMenu() {
+		// Check if #menu exists and if it hasn't been loaded already
+		if ($menu.length && !$menu.data('loaded')) {
+			// Ensure the inner wrapper exists so we don't clobber it during load
+			if (!$menu.children('.inner').length) {
+				$menu.wrapInner('<div class="inner"></div>');
+			}
+			var cacheBuster = 'v=' + Date.now();
+			$menu.children('.inner').load('menu.html?' + cacheBuster, function(response, status, xhr) {
+				if (status == "error") {
+					console.log("Error loading menu.html: " + xhr.status + " " + xhr.statusText);
+				} else {
+					// Mark as loaded to prevent multiple loads if script is run again
+					$menu.data('loaded', true);
+					// Re-initialize menu scripts if they depend on dynamic content
+					initForms($menu);
+					console.log("Menu loaded successfully.");
+					$menu.trigger('menu_loaded');
+				}
+			});
+		}
+	}
+
+	$(function() {
+		loadMenu();
+	});
 
 })(jQuery);
