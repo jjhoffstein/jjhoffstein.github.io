@@ -22,6 +22,13 @@ test('public pages do not load Google Analytics before consent', () => {
   }
 });
 
+test('Snake game uses local production styles instead of the Tailwind Play CDN', () => {
+  const snakePage = pageContents[pages.indexOf('basketball_snake.html')];
+  assert.doesNotMatch(snakePage, /cdn\.tailwindcss\.com/);
+  assert.doesNotMatch(snakePage, /fonts\.googleapis\.com|fonts\.gstatic\.com/);
+  assert.match(snakePage, /href="basketball_snake\.css"/);
+});
+
 test('portfolio pages declare essential language and search metadata', () => {
   for (const [index, page] of pageContents.entries()) {
     if (['elements.html', 'generic.html', 'menu.html'].includes(pages[index])) continue;

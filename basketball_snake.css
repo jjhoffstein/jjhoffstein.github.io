@@ -1,117 +1,289 @@
-body {
-    font-family: 'Source Sans Pro', sans-serif;
+.basketball-snake .game-page {
+    text-align: center;
 }
-#game-container {
+
+.basketball-snake .game-title {
+    margin-bottom: 1rem;
+}
+
+.basketball-snake .game-intro {
+    margin: 0 auto 2rem;
+    max-width: 42rem;
+}
+
+.basketball-snake .game-intro p {
+    font-size: 1.125rem;
+    margin-bottom: 1rem;
+}
+
+.basketball-snake .game-button,
+.basketball-snake .game-icon-button,
+.basketball-snake #touchControls button {
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font: inherit;
+    font-weight: 700;
+}
+
+.basketball-snake .game-button {
+    background: #f97316;
+    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.2);
+    color: #ffffff;
+    padding: 0.75rem 1.5rem;
+}
+
+.basketball-snake .game-button:hover,
+.basketball-snake .game-button:focus-visible {
+    background: #ea580c;
+}
+
+.basketball-snake .game-button:focus-visible,
+.basketball-snake .game-icon-button:focus-visible,
+.basketball-snake #touchControls button:focus-visible {
+    outline: 3px solid #fb923c;
+    outline-offset: 3px;
+}
+
+.basketball-snake #game-container {
+    aspect-ratio: 1;
     background: radial-gradient(#76522b, #3d2914);
+    border-radius: 0.5rem;
+    box-shadow: 0 1.5rem 2.5rem rgba(0, 0, 0, 0.25);
+    margin: 0 auto;
+    max-width: 600px;
+    overflow: hidden;
     position: relative;
     width: 100%;
-    max-width: 600px;
-    margin: 0 auto;
-    aspect-ratio: 1;
 }
-#gameCanvas {
+
+.basketball-snake #gameCanvas {
     display: block;
-    width: 100%;
     height: 100%;
-}
-.snake {
-    fill: orange;
-    stroke: black;
-}
-.food {
-    fill: #ff5722;
-}
-#startRestartButton {
-    top: 65% !important;
-}
-#gameOverMessage {
-    top: 35% !important;
+    width: 100%;
 }
 
-.game-description {
-    text-align: center;
-    margin-bottom: 2em;
-}
-
-.game-description p {
-    margin-bottom: 1em;
-}
-
-.game-controls {
+.basketball-snake #score,
+.basketball-snake #lives,
+.basketball-snake #highScore {
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
     position: absolute;
-    top: 1em;
-    left: 1em;
-    display: flex;
-    gap: 1em;
-    color: white;
+    top: 1rem;
 }
 
-#touchControls {
-    position: absolute;
-    bottom: 1em;
+.basketball-snake #score {
+    left: 1rem;
+}
+
+.basketball-snake #lives {
     left: 50%;
     transform: translateX(-50%);
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.5em;
-    padding: 1em;
 }
 
-#touchControls button {
-    width: 3em;
-    height: 3em;
-    font-size: 1.5em;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    border-radius: 0.5em;
-    color: white;
-    cursor: pointer;
+.basketball-snake #highScore {
+    right: 1rem;
 }
 
-#touchControls button:active {
-    background: rgba(255, 255, 255, 0.4);
+.basketball-snake #startRestartButton,
+.basketball-snake #loadingMessage,
+.basketball-snake #countdown {
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
-#howToPlayModal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
+.basketball-snake #startRestartButton {
+    top: 65%;
+}
+
+.basketball-snake #gameOverMessage {
+    color: #f87171;
+    font-size: 2.25rem;
+    font-weight: 700;
+    left: 50%;
+    position: absolute;
+    top: 35%;
+    transform: translateX(-50%);
+}
+
+.basketball-snake #loadingMessage {
+    color: #ffffff;
+    font-size: 1.25rem;
+}
+
+.basketball-snake #countdown {
+    color: #ffffff;
+    font-size: 3.75rem;
+    font-weight: 700;
+}
+
+.basketball-snake #pauseOverlay {
     align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    display: flex;
+    font-size: 2.25rem;
+    font-weight: 700;
+    inset: 0;
+    justify-content: center;
+    position: absolute;
+}
+
+.basketball-snake .game-utility-controls {
+    display: flex;
+    gap: 0.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 3.75rem;
+}
+
+.basketball-snake .game-icon-button,
+.basketball-snake #touchControls button {
+    background: #374151;
+    color: #ffffff;
+}
+
+.basketball-snake .game-icon-button {
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: 0.5rem;
+}
+
+.basketball-snake .game-icon-button:hover,
+.basketball-snake #touchControls button:hover {
+    background: #4b5563;
+}
+
+.basketball-snake .hidden {
+    display: none !important;
+}
+
+.basketball-snake #touchControls {
+    bottom: 0.5rem;
+    display: none;
+    gap: 0.25rem;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 8rem;
+    left: 50%;
+    opacity: 0.8;
+    position: absolute;
+    transform: translateX(-50%);
+    width: 8rem;
+}
+
+.basketball-snake #touchControls button {
+    font-size: 1.25rem;
+}
+
+.basketball-snake .touch-up {
+    grid-column: 2;
+}
+
+.basketball-snake .touch-left {
+    grid-row: 2;
+}
+
+.basketball-snake .touch-right {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.basketball-snake .touch-down {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.basketball-snake #howToPlayModal {
+    align-items: center;
+    background: rgba(0, 0, 0, 0.5);
+    inset: 0;
+    justify-content: center;
+    position: fixed;
     z-index: 1000;
 }
 
-.modal-content {
-    background: #1a202c;
-    padding: 2em;
-    border-radius: 0.5em;
-    max-width: 600px;
-    width: 90%;
+.basketball-snake .modal-content {
+    background: #1f2937;
+    border-radius: 0.5rem;
+    color: #f9fafb;
+    max-height: calc(100vh - 2rem);
+    max-width: 42rem;
+    overflow-y: auto;
+    padding: 1.5rem;
+    text-align: left;
+    width: min(90%, 42rem);
 }
 
-.controls-grid {
+.basketball-snake .modal-content h2,
+.basketball-snake .modal-content h3 {
+    color: #ffffff;
+    letter-spacing: normal;
+}
+
+.basketball-snake .modal-content h2 {
+    margin-bottom: 1rem;
+}
+
+.basketball-snake .modal-content h3 {
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.basketball-snake .modal-content ul {
+    list-style: disc inside;
+}
+
+.basketball-snake .modal-content li + li {
+    margin-top: 0.5rem;
+}
+
+.basketball-snake .controls-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2em;
-    margin: 1em 0;
+    gap: 1.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 1rem 0;
 }
 
-@media (max-width: 768px) {
-    .controls-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    #touchControls {
+.basketball-snake .modal-rules {
+    margin-top: 1.5rem;
+}
+
+.basketball-snake #closeHowToPlay {
+    margin-top: 1.5rem;
+}
+
+@media screen and (max-width: 768px) {
+    .basketball-snake #touchControls {
         display: grid;
     }
+
+    .basketball-snake .controls-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
-@media (min-width: 769px) {
-    #touchControls {
-        display: none;
+@media screen and (max-width: 480px) {
+    .basketball-snake #score,
+    .basketball-snake #lives,
+    .basketball-snake #highScore {
+        font-size: 1rem;
+        top: 0.75rem;
+    }
+
+    .basketball-snake #score {
+        left: 0.75rem;
+    }
+
+    .basketball-snake #highScore {
+        right: 0.75rem;
+    }
+
+    .basketball-snake .game-utility-controls {
+        right: 0.75rem;
+        top: 2.5rem;
     }
 }
