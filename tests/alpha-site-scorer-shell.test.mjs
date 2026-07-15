@@ -5,6 +5,7 @@ import test from 'node:test';
 const page = readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8');
 const menuScript = readFileSync(new URL('../assets/js/main.js', import.meta.url), 'utf8');
 const menu = readFileSync(new URL('../menu.html', import.meta.url), 'utf8');
+const dashboardStyles = readFileSync(new URL('../assets/css/alpha-site-scorer.css', import.meta.url), 'utf8');
 
 test('Alpha Site Scorer uses the shared portfolio shell and nested menu path', () => {
   assert.match(page, /href="\.\.\/assets\/css\/main\.css"/);
@@ -23,12 +24,24 @@ test('shared menu loader honors a nested-page menu path and menu links work from
   assert.match(menu, /href="\/index\.html"/);
 });
 
-test('dashboard navigation controls use text labels with an accessible theme toggle', () => {
-  assert.match(page, /aria-label="Toggle color theme"/);
+test('dashboard navigation controls use text labels', () => {
   assert.match(page, />Cards<\/button>/);
   assert.match(page, />Kanban<\/button>/);
   assert.match(page, />Map<\/button>/);
   assert.doesNotMatch(page, /📋 Cards|📊 Kanban|🗺️ Map/);
+});
+
+test('dashboard has no dark-mode control or behavior', () => {
+  assert.doesNotMatch(page, /<button[^>]*theme-toggle/);
+  assert.doesNotMatch(page, /toggleDark/);
+  assert.doesNotMatch(page, /localStorage\.getItem\('dark'\)/);
+  assert.doesNotMatch(dashboardStyles, /\.theme-toggle|body\.alpha-site-scorer\.dark/);
+});
+
+test('dashboard button styles distinguish default, hover, and active states', () => {
+  assert.match(dashboardStyles, /\.view-toggle button,[\s\S]*background: #ffffff;[\s\S]*color: #585858 !important;/);
+  assert.match(dashboardStyles, /\.view-toggle button:hover,[\s\S]*background: #fde7ed;[\s\S]*color: #585858 !important;/);
+  assert.match(dashboardStyles, /\.view-toggle button\.active \{[\s\S]*background: #f2849e;[\s\S]*color: #ffffff !important;/);
 });
 
 test('site cards follow the page heading hierarchy', () => {

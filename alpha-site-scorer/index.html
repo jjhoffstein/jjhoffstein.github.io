@@ -15,7 +15,7 @@ body.dark .kanban-col{background:#1e293b}
 body.dark .kanban-card{background:#334155}
 body.dark .kanban-col.drag-over{background:#1e3a5f}</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><link rel="stylesheet" href="../assets/css/fontawesome-all.min.css"><link rel="stylesheet" href="../assets/css/main.css"><link rel="stylesheet" href="../assets/css/alpha-site-scorer.css">
 </head>
-<body class="is-preload alpha-site-scorer"><div id="wrapper"><header id="header"><div class="inner"><a href="../index.html" class="logo"><span class="symbol"><img src="../images/prawny-world-1303103.jpg" alt=""></span><span class="title">JJ Hoffstein</span></a><nav><ul><li><a href="#menu">Menu</a></li></ul></nav></div></header><nav id="menu" data-menu-src="../menu.html"></nav><div id="main"><div class="inner"><button class="theme-toggle" onclick="toggleDark()" aria-label="Toggle color theme">Dark theme</button><div class="container">
+<body class="is-preload alpha-site-scorer"><div id="wrapper"><header id="header"><div class="inner"><a href="../index.html" class="logo"><span class="symbol"><img src="../images/prawny-world-1303103.jpg" alt=""></span><span class="title">JJ Hoffstein</span></a><nav><ul><li><a href="#menu">Menu</a></li></ul></nav></div></header><nav id="menu" data-menu-src="../menu.html"></nav><div id="main"><div class="inner"><div class="container">
 <header class="dashboard-header"><h1>Alpha Site Pipeline</h1><p class="subtitle">Site viability scoring system</p></header>
 <main><div class="summary" id="summary"></div><div class="funnel" id="funnel"></div>
 <div class="view-toggle"><button onclick="showView('grid')" id="btn-grid" class="active">Cards</button><button onclick="showView('kanban')" id="btn-kanban">Kanban</button><button onclick="showView('map')" id="btn-map">Map</button></div><div id="map"></div>
@@ -96,7 +96,6 @@ function showCostDetail(i){
   document.getElementById('costModal').classList.add('active');
 }
 function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
-function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'Light theme':'Dark theme';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='Light theme';}
 document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
 render();}
 function deleteSite(){if(confirm('Delete?')){sites.splice(editingIndex,1);localStorage.setItem('alpha-sites',JSON.stringify(sites));closeModal();
@@ -131,7 +130,6 @@ function showCostDetail(i){
   document.getElementById('costModal').classList.add('active');
 }
 function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
-function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'Light theme':'Dark theme';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='Light theme';}
 document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
 render();}}
 
@@ -166,7 +164,6 @@ function showCostDetail(i){
   document.getElementById('costModal').classList.add('active');
 }
 function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
-function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'Light theme':'Dark theme';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='Light theme';}
 document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
 render();
 
