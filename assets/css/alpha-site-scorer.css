@@ -201,4 +201,12 @@ body.alpha-site-scorer #map {
 		font-size: 1.75em;
 	}
 
+	body.alpha-site-scorer .funnel-stage::after {
+		display: none;
+	}
+
+	body.alpha-site-scorer .grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
 }

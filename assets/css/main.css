@@ -86,7 +86,6 @@ input, select, textarea {
 		html, body {
 			min-width: 320px;
 		}
-
 	}
 
 	html {
@@ -185,6 +184,13 @@ input, select, textarea {
 			}
 
 		}
+
+/* Accessibility */
+
+:focus-visible {
+	outline: 3px solid #f2849e;
+	outline-offset: 3px;
+}
 
 		@media screen and (max-width: 360px) {
 
