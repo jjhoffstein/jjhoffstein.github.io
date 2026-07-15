@@ -1,0 +1,254 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Alpha Site Pipeline Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Inter',system-ui,sans-serif;background:#f8fafc;color:#1e293b;line-height:1.5}.container{max-width:1200px;margin:0 auto;padding:40px 20px}header{text-align:center;margin-bottom:40px}h1{font-size:2.5rem;font-weight:700;color:#0f172a;margin-bottom:8px}.subtitle{color:#64748b;font-size:1.1rem}.summary{display:flex;gap:16px;justify-content:center;margin:30px 0;flex-wrap:wrap}.stat-box{background:white;padding:16px 32px;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.1);min-width:120px}.stat-box .num{font-size:1.75rem;font-weight:700}.stat-box .lbl{color:#64748b;font-size:0.85rem}.stat-box.green .num{color:#16a34a}.stat-box.yellow .num{color:#ca8a04}.stat-box.red .num{color:#dc2626}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}body.dark{background:#0f172a;color:#e2e8f0}body.dark .card,body.dark .stat-box,body.dark .modal-content{background:#1e293b;color:#e2e8f0}body.dark h1,body.dark h3{color:#f8fafc}body.dark .address,body.dark .label,body.dark .weak,body.dark .lbl{color:#94a3b8}body.dark .score-bar{background:#334155}body.dark .form-group input{background:#334155;border-color:#475569;color:#f8fafc}body.dark .btn-secondary{background:#334155;color:#e2e8f0}body.dark .score-detail{border-color:#334155}body.dark #cost-details>div>div{background:#334155!important}.theme-toggle{position:fixed;top:16px;right:16px;background:#1e293b;color:#f8fafc;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;z-index:1001;font-size:1rem}body.dark .theme-toggle{background:#f8fafc;color:#0f172a}@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(22,163,74,0.4)}50%{box-shadow:0 0 0 8px rgba(22,163,74,0)}}.card{transition:transform 0.2s,box-shadow 0.2s}.card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.12)}.card .score{animation:countUp 0.5s ease-out}.funnel{display:flex;gap:4px;margin:20px 0;justify-content:center;flex-wrap:wrap}.funnel-stage{text-align:center;padding:12px 16px;background:white;border-radius:8px;min-width:100px;position:relative}.funnel-stage::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:#cbd5e1}.funnel-stage:last-child::after{content:""}.funnel-stage .count{font-size:1.5rem;font-weight:700}.funnel-stage .label{font-size:0.75rem;color:#64748b}body.dark .funnel-stage{background:#1e293b}.stale{animation:stale-pulse 1s infinite}@keyframes stale-pulse{0%,100%{box-shadow:inset 0 0 0 2px #f97316}50%{box-shadow:inset 0 0 0 2px transparent}}.notes{font-size:0.8rem;color:#64748b;margin-top:8px;padding:8px;background:#f8fafc;border-radius:6px;white-space:pre-wrap;cursor:pointer;transition:all 0.2s;position:relative}.notes:hover{background:#f1f5f9}.notes::after{content:"✏️";position:absolute;right:8px;top:8px;opacity:0;transition:opacity 0.2s}.notes:hover::after{opacity:1}.notes.expanded{max-height:none}.notes-empty{font-size:0.75rem;color:#94a3b8;padding:6px 8px;border:1px dashed #e2e8f0;border-radius:6px;cursor:pointer;text-align:center;margin-top:8px}.notes-empty:hover{border-color:#94a3b8;color:#64748b}body.dark .notes{background:#334155}body.dark .notes:hover{background:#3f4f63}body.dark .notes-empty{border-color:#475569;color:#64748b}#edit-notes{transition:border-color 0.2s}#edit-notes:focus{border-color:#3b82f6;outline:none;box-shadow:0 0 0 3px rgba(59,130,246,0.1)}.char-count{font-size:0.7rem;color:#94a3b8;text-align:right;margin-top:4px}.stale-warning{position:absolute;top:8px;left:8px;font-size:0.7rem;background:#fef3c7;color:#b45309;padding:2px 6px;border-radius:4px}.status-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;margin-right:8px}.status-Sourced{background:#e0f2fe;color:#0369a1}.status-Site-Visit{background:#fef9c3;color:#a16207}.status-LOI{background:#dbeafe;color:#1d4ed8}.status-Negotiation{background:#fce7f3;color:#be185d}.status-Signed{background:#dcfce7;color:#16a34a}.days-badge{font-size:0.7rem;color:#94a3b8}.top-pick{position:absolute;top:-8px;left:16px;background:linear-gradient(135deg,#16a34a,#22c55e);color:white;padding:4px 12px;border-radius:12px;font-size:0.7rem;font-weight:700;animation:pulse 2s infinite;z-index:10}.score-detail{opacity:0;max-height:0;overflow:hidden;transition:all 0.3s ease;font-size:0.75rem;color:#64748b;margin-top:8px;padding-top:0;border-top:0 solid #e2e8f0}.card:hover .score-detail{opacity:1;max-height:100px;padding-top:8px;border-top:1px solid #e2e8f0}.card{background:white;border-radius:16px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,0.1);position:relative;border-left:4px solid #e2e8f0}.card.go{border-left-color:#16a34a}.card.caution{border-left-color:#ca8a04}.card.nogo{border-left-color:#dc2626}.rank{position:absolute;top:12px;right:50px;background:#f1f5f9;color:#64748b;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600}.edit-btn{position:absolute;top:10px;right:12px;background:none;border:none;cursor:pointer;font-size:1rem;padding:4px 8px;border-radius:6px;opacity:0.5}.edit-btn:hover{opacity:1;background:#f1f5f9}h3{font-size:1.1rem;font-weight:600;margin-bottom:4px;padding-right:80px}.address{color:#64748b;font-size:0.85rem;margin-bottom:8px}.cost{display:flex;gap:8px;margin-bottom:8px;font-size:0.8rem;flex-wrap:wrap}.cost span{background:#ecfdf5;color:#059669;padding:2px 8px;border-radius:4px}.stats{display:flex;gap:12px;margin-bottom:12px}.stats div{flex:1;min-width:0}.label{display:block;color:#94a3b8;font-size:0.7rem;text-transform:uppercase}.value{font-weight:600;font-size:0.9rem}.score-bar{background:#e2e8f0;height:8px;border-radius:4px;overflow:hidden;margin-bottom:8px}.fill{height:100%;border-radius:4px}.card.go .fill{background:linear-gradient(90deg,#16a34a,#22c55e)}.card.caution .fill{background:linear-gradient(90deg,#ca8a04,#eab308)}.card.nogo .fill{background:linear-gradient(90deg,#dc2626,#ef4444)}.score{font-size:1.4rem;font-weight:700}.score span{color:#94a3b8;font-size:0.9rem}.decision{display:inline-block;padding:6px 14px;border-radius:20px;font-size:0.8rem;font-weight:600;margin:8px 0}.card.go .decision{background:#dcfce7;color:#16a34a}.card.caution .decision{background:#fef9c3;color:#ca8a04}.card.nogo .decision{background:#fee2e2;color:#dc2626}.detail-btn{background:none;border:1px solid #e2e8f0;padding:4px 8px;border-radius:6px;font-size:0.75rem;cursor:pointer;margin-top:4px}.detail-btn:hover{background:#f1f5f9}.profit{color:#16a34a}.loss{color:#94a3b8}#costModal .breakdown{display:grid;grid-template-columns:1fr auto;gap:8px;margin:16px 0}#costModal .breakdown dt{color:#64748b}#costModal .breakdown dd{font-weight:600;text-align:right}#costModal .total{border-top:2px solid #e2e8f0;padding-top:8px;margin-top:8px}.weak{color:#64748b;font-size:0.8rem}footer{text-align:center;margin-top:40px;color:#94a3b8;font-size:0.8rem}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}.modal.active{display:flex}.modal-content{background:white;padding:24px;border-radius:16px;width:90%;max-width:500px;max-height:90vh;overflow-y:auto}.modal h2{margin-bottom:16px;font-size:1.25rem}.form-group{margin-bottom:12px}.form-group label{display:block;font-size:0.85rem;color:#64748b;margin-bottom:4px}.form-group input{width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.9rem}.form-group input[type="checkbox"]{width:auto}.checkbox-group{display:flex;align-items:center;gap:8px}.btn-row{display:flex;gap:12px;margin-top:20px}.btn{padding:10px 20px;border-radius:8px;font-weight:600;cursor:pointer;border:none;font-size:0.9rem}.btn-primary{background:#3b82f6;color:white}.btn-secondary{background:#e2e8f0;color:#64748b}.btn-danger{background:#fee2e2;color:#dc2626}.map-legend{position:absolute;bottom:30px;right:10px;background:white;padding:12px;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,0.2);z-index:1000;font-size:0.8rem}.map-legend div{display:flex;align-items:center;gap:8px;margin:4px 0}.map-legend span{width:14px;height:14px;border-radius:50%;display:inline-block}#map{height:400px;border-radius:16px;margin-bottom:20px;display:none}.view-toggle{margin-bottom:20px;display:flex;gap:8px}.view-toggle button{padding:8px 16px;border-radius:8px;border:1px solid #e2e8f0;background:white;cursor:pointer}.view-toggle button.active{background:#3b82f6;color:white;border-color:#3b82f6}@media(max-width:640px){h1{font-size:1.75rem}.grid{grid-template-columns:1fr}}.kanban{display:none;gap:12px;overflow-x:auto;padding-bottom:16px}
+.kanban-col{flex:1;min-width:220px;max-width:280px;background:#f1f5f9;border-radius:12px;padding:12px}
+.kanban-col h4{font-size:0.85rem;color:#64748b;margin-bottom:12px;display:flex;justify-content:space-between}
+.kanban-col h4 span{background:#e2e8f0;padding:2px 8px;border-radius:10px;font-size:0.75rem}
+.kanban-card{background:white;border-radius:8px;padding:12px;margin-bottom:8px;cursor:grab;box-shadow:0 1px 2px rgba(0,0,0,0.05);border-left:3px solid #e2e8f0;transition:transform 0.15s,box-shadow 0.15s}
+.kanban-card:active{cursor:grabbing}
+.kanban-card.dragging{opacity:0.5;transform:rotate(2deg)}
+.kanban-card.go{border-left-color:#16a34a}
+.kanban-card.caution{border-left-color:#ca8a04}
+.kanban-card.nogo{border-left-color:#dc2626}
+.kanban-col.drag-over{background:#dbeafe}
+body.dark .kanban-col{background:#1e293b}
+body.dark .kanban-card{background:#334155}
+body.dark .kanban-col.drag-over{background:#1e3a5f}</style><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body><button class="theme-toggle" onclick="toggleDark()">🌙</button><div class="container">
+<header><h1>🏫 Alpha Site Pipeline</h1><p class="subtitle">AI-Powered Site Viability Scoring System</p></header>
+<main><div class="summary" id="summary"></div><div class="funnel" id="funnel"></div>
+<div class="view-toggle"><button onclick="showView('grid')" id="btn-grid" class="active">📋 Cards</button><button onclick="showView('kanban')" id="btn-kanban">📊 Kanban</button><button onclick="showView('map')" id="btn-map">🗺️ Map</button></div><div id="map"></div>
+<div class="kanban" id="kanban"></div><div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+<button class="btn btn-primary" onclick="addNewSite()">+ Add New Site</button>
+<button class="btn btn-secondary" onclick="exportSites()">📤 Export</button>
+<label class="btn btn-secondary" style="cursor:pointer;margin:0">📥 Import<input type="file" accept=".json" onchange="importSites(event)" style="display:none"></label>
+</div>
+<div class="grid" id="grid"></div></main>
+<footer>Generated by Site Scorer • Click ✏️ to edit • Scores update live</footer>
+</div>
+<div class="modal" id="editModal"><div class="modal-content">
+<h2>Edit Site</h2>
+<div class="form-group"><label>Name</label><input type="text" id="edit-name"></div>
+<div class="form-group"><label>Address</label><input type="text" id="edit-address"></div>
+<div class="form-group"><label>Zip Code</label><input type="text" id="edit-zip"></div>
+<div class="form-group"><label>Square Footage</label><input type="number" id="edit-sqft"></div>
+<div class="form-group"><label>Monthly Rent ($)</label><input type="number" id="edit-rent"></div>
+<div class="form-group checkbox-group"><input type="checkbox" id="edit-driveway"><label>Has Driveway</label></div>
+<div class="form-group checkbox-group"><input type="checkbox" id="edit-outdoor"><label>Has Outdoor Space</label></div>
+<div class="form-group checkbox-group"><input type="checkbox" id="edit-kitchen"><label>Has Kitchen Area</label></div>
+<div class="form-group"><label>Notes</label><textarea id="edit-notes" rows="3" style="width:100%;padding:8px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:0.9rem;font-family:inherit;resize:vertical" placeholder="Broker contact, next steps, blockers..." maxlength="500" oninput="document.getElementById('char-count').textContent=this.value.length+'/500'"></textarea><div class="char-count" id="char-count">0/500</div></div><div class="form-group"><label>Status</label><select id="edit-status"><option value="Sourced">Sourced</option><option value="Site Visit">Site Visit</option><option value="LOI">LOI</option><option value="Negotiation">Negotiation</option><option value="Signed">Signed</option></select></div><div class="form-group checkbox-group"><input type="checkbox" id="edit-zoning"><label>Zoning Clear</label></div>
+<div class="btn-row"><button class="btn btn-primary" onclick="saveSite()">Save</button><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-danger" onclick="deleteSite()">Delete</button></div>
+</div></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+let sites=[{"name": "NYC Financial District", "address": "180 Maiden Lane", "sqft": 18000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 85000, "parking_spots": 0, "zoning_clear": true, "zip_code": "10038"}, {"name": "Miami Tropical Park", "address": "8000 SW 56th St", "sqft": 15000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 28000, "parking_spots": 0, "zoning_clear": true, "zip_code": "33155"}, {"name": "Scottsdale", "address": "7001 N Scottsdale Rd", "sqft": 12000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 22000, "parking_spots": 0, "zoning_clear": true, "zip_code": "85253"}, {"name": "San Francisco SOMA", "address": "500 Folsom St", "sqft": 14000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": false, "monthly_rent": 65000, "parking_spots": 0, "zoning_clear": true, "zip_code": "94105"}, {"name": "Brownsville TX", "address": "1200 E Price Rd", "sqft": 16000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 12000, "parking_spots": 0, "zoning_clear": true, "zip_code": "78521"}, {"name": "Palm Beach", "address": "300 S County Rd", "sqft": 11000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 35000, "parking_spots": 0, "zoning_clear": true, "zip_code": "33480"}, {"name": "Raleigh NC", "address": "4601 Six Forks Rd", "sqft": 13000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 18000, "parking_spots": 0, "zoning_clear": true, "zip_code": "27609"}, {"name": "Orlando", "address": "7600 Dr Phillips Blvd", "sqft": 14000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 20000, "parking_spots": 0, "zoning_clear": true, "zip_code": "32819"}, {"name": "Charlotte", "address": "4400 Sharon Rd", "sqft": 12500, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 19000, "parking_spots": 0, "zoning_clear": true, "zip_code": "28211"}, {"name": "Denver", "address": "1600 Glenarm Pl", "sqft": 11000, "has_driveway": false, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 24000, "parking_spots": 0, "zoning_clear": true, "zip_code": "80202"}, {"name": "Detroit Warehouse", "address": "5000 Michigan Ave", "sqft": 25000, "has_driveway": false, "has_outdoor_space": false, "has_kitchen_area": false, "monthly_rent": 8000, "parking_spots": 0, "zoning_clear": true, "zip_code": "48210"}, {"name": "Rural Kansas", "address": "100 Main St", "sqft": 4000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": false, "monthly_rent": 2000, "parking_spots": 0, "zoning_clear": true, "zip_code": "67401"}, {"name": "Houston Galleria", "address": "5000 Westheimer Rd", "sqft": 16000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 26000, "parking_spots": 0, "zoning_clear": true, "zip_code": "77056"}, {"name": "Dallas Uptown", "address": "2500 McKinney Ave", "sqft": 13000, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 21000, "parking_spots": 0, "zoning_clear": true, "zip_code": "75201"}, {"name": "Austin Mueller", "address": "1900 Aldrich St", "sqft": 14500, "has_driveway": true, "has_outdoor_space": true, "has_kitchen_area": true, "monthly_rent": 19000, "parking_spots": 0, "zoning_clear": true, "zip_code": "78723"}];const stored=localStorage.getItem('alpha-sites');if(stored)sites=JSON.parse(stored);let editingIndex=-1;
+function isStale(s){if(!s.date_added)return false;let days=Math.floor((Date.now()-new Date(s.date_added))/(1000*60*60*24));let status=s.status||'Sourced';if(status==='Sourced'&&days>7)return true;if(status==='Site Visit'&&days>14)return true;if(status==='LOI'&&days>21)return true;if(status==='Negotiation'&&days>30)return true;return false;}
+function scoreSite(s){let scores={};scores.sqft=Math.min(s.sqft/5250,1)*25;scores.driveway=s.has_driveway?15:0;scores.outdoor=s.has_outdoor_space?12:0;scores.kitchen=s.has_kitchen_area?12:0;scores.zoning=s.zoning_clear?8:0;scores.cost=Math.max(0,8-(s.monthly_rent/s.sqft-1)*4);let total=Object.values(scores).reduce((a,b)=>a+b,0);let weak=Object.entries(scores).filter(([k,v])=>v<5).map(([k])=>k);return{total:Math.min(total,100),tier:total>=75?'GREEN':total>=50?'YELLOW':'RED',weak};}
+function costAnalysis(s){
+  let rent=s.monthly_rent*12;
+  let guides=Math.ceil(s.sqft/5000);
+  let guideSalary=110000*guides;
+  let headOfSchool=guides>=2?130000:0;
+  let utilities=s.sqft*3;
+  let insurance=15000;
+  let marketing=25000;
+  let food=s.sqft/50*1500;
+  let totalCost=rent+guideSalary+headOfSchool+utilities+insurance+marketing+food;
+  let tuition=15000;
+  let capacity=Math.floor(s.sqft/50);
+  let breakEven=Math.ceil(totalCost/tuition);
+  return{rent,guides,guideSalary,headOfSchool,utilities,insurance,marketing,food,totalCost,tuition,capacity,breakEven,margin:capacity>breakEven?((capacity-breakEven)*tuition):0};
+}
+function render(){let ranked=sites.map((s,i)=>({site:s,idx:i,...scoreSite(s)})).sort((a,b)=>b.total-a.total);let green=ranked.filter(r=>r.tier==='GREEN').length,yellow=ranked.filter(r=>r.tier==='YELLOW').length,red=ranked.filter(r=>r.tier==='RED').length;document.getElementById('summary').innerHTML=`<div class="stat-box"><div class="num">${ranked.length}</div><div class="lbl">Sites</div></div><div class="stat-box green"><div class="num">${green}</div><div class="lbl">✅ Green</div></div><div class="stat-box yellow"><div class="num">${yellow}</div><div class="lbl">⚠️ Yellow</div></div><div class="stat-box red"><div class="num">${red}</div><div class="lbl">❌ Red</div></div>`;let stages=['Sourced','Site Visit','LOI','Negotiation','Signed'];document.getElementById('funnel').innerHTML=stages.map(st=>{let count=sites.filter(s=>(s.status||'Sourced')===st).length;return`<div class="funnel-stage"><div class="count">${count}</div><div class="label">${st}</div></div>`;}).join('');let tierClass={GREEN:'go',YELLOW:'caution',RED:'nogo'},tierIcon={GREEN:'✅',YELLOW:'⚠️',RED:'❌'};document.getElementById('grid').innerHTML=ranked.map((r,i)=>{let s=r.site,c=costAnalysis(s);return`<article class="card ${tierClass[r.tier]}${isStale(r.site)?' stale':''}" data-idx="${r.idx}">${isStale(r.site)?'<div class="stale-warning">⏰ Stale</div>':''}<div class="rank">#${i+1}</div><button class="edit-btn" onclick="editSite(${r.idx})">✏️</button><h3>${s.name}</h3><p class="address">${s.address}${s.zip_code?' ('+s.zip_code+')':''}</p><div><span class="status-badge status-${(s.status||'Sourced').replace(' ','-')}">${s.status||'Sourced'}</span><span class="days-badge">${s.date_added?Math.floor((Date.now()-new Date(s.date_added))/(1000*60*60*24))+' days in pipeline':'New'}</span></div><div class="${s.notes?'notes':'notes-empty'}" onclick="event.stopPropagation();editSite(${r.idx});setTimeout(()=>document.getElementById('edit-notes').focus(),100)">${s.notes?s.notes.substring(0,80)+(s.notes.length>80?'...':''):'+ Add notes'}</div><div class="stats"><div><span class="label">Sq Ft</span><span class="value">${s.sqft.toLocaleString()}</span></div><div><span class="label">Rent</span><span class="value">$${s.monthly_rent.toLocaleString()}/mo</span></div><div><span class="label">$/sqft</span><span class="value">$${(s.monthly_rent/s.sqft).toFixed(2)}</span></div></div><div class="cost"><span title="Annual costs: $${c.totalCost.toLocaleString()}">Break-even: ${c.breakEven} students</span><span>Capacity: ${c.capacity}</span><span class="${c.margin>0?'profit':'loss'}">${c.margin>0?'Margin: $'+c.margin.toLocaleString():'At capacity'}</span></div><button class="detail-btn" onclick="showCostDetail(${r.idx})">📊 Cost Breakdown</button><div class="score-bar"><div class="fill" style="width:${r.total}%"></div></div><div class="score">${r.total.toFixed(1)}<span>/100</span></div><div class="decision">${tierIcon[r.tier]} ${r.tier}</div><div class="weak">${r.weak.length?'Weak: '+r.weak.join(', '):'✓ OK'}</div></article>`;}).join('');if(document.getElementById('map').style.display==='block')updateMarkers();}
+function addNewSite(){sites.push({name:'New Site',address:'',zip_code:null,sqft:10000,monthly_rent:15000,has_driveway:true,has_outdoor_space:true,has_kitchen_area:true,zoning_clear:true,parking_spots:0,status:'Sourced',date_added:new Date().toISOString()});localStorage.setItem('alpha-sites',JSON.stringify(sites));editSite(sites.length-1);}
+function editSite(i){editingIndex=i;let s=sites[i];document.getElementById('edit-name').value=s.name;document.getElementById('edit-address').value=s.address;document.getElementById('edit-zip').value=s.zip_code||'';document.getElementById('edit-sqft').value=s.sqft;document.getElementById('edit-rent').value=s.monthly_rent;document.getElementById('edit-driveway').checked=s.has_driveway;document.getElementById('edit-outdoor').checked=s.has_outdoor_space;document.getElementById('edit-kitchen').checked=s.has_kitchen_area;document.getElementById('edit-zoning').checked=s.zoning_clear;document.getElementById('edit-status').value=s.status||'Sourced';document.getElementById('edit-notes').value=s.notes||'';document.getElementById('char-count').textContent=(s.notes||'').length+'/500';document.getElementById('editModal').classList.add('active');}
+function closeModal(){document.getElementById('editModal').classList.remove('active');}
+function saveSite(){sites[editingIndex]={name:document.getElementById('edit-name').value,address:document.getElementById('edit-address').value,zip_code:document.getElementById('edit-zip').value||null,sqft:parseInt(document.getElementById('edit-sqft').value),monthly_rent:parseInt(document.getElementById('edit-rent').value),has_driveway:document.getElementById('edit-driveway').checked,has_outdoor_space:document.getElementById('edit-outdoor').checked,has_kitchen_area:document.getElementById('edit-kitchen').checked,zoning_clear:document.getElementById('edit-zoning').checked,parking_spots:0,status:document.getElementById('edit-status').value,date_added:sites[editingIndex].date_added||new Date().toISOString(),notes:document.getElementById('edit-notes').value};localStorage.setItem('alpha-sites',JSON.stringify(sites));closeModal();
+const zipCoords={"28211": [35.15, -80.82], "78723": [30.3, -97.69], "27609": [35.84, -78.63], "32819": [28.45, -81.49], "77056": [29.74, -95.46], "78521": [25.93, -97.48], "33155": [25.73, -80.31], "75201": [32.79, -96.8], "85253": [33.56, -111.89], "10038": [40.71, -74.0], "33480": [26.7, -80.04], "67401": [38.84, -97.61], "80202": [39.75, -104.99], "94105": [37.79, -122.39], "48210": [42.33, -83.11]};let map,markers=[];
+function initMap(){if(map)return;map=L.map('map').setView([39,-98],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+let legend=L.control({position:'bottomright'});legend.onAdd=function(){let d=L.DomUtil.create('div','map-legend');d.innerHTML='<div><span style="background:#16a34a"></span>Green (75+)</div><div><span style="background:#ca8a04"></span>Yellow (50-74)</div><div><span style="background:#dc2626"></span>Red (<50)</div>';return d;};legend.addTo(map);}
+function updateMarkers(){markers.forEach(m=>map.removeLayer(m));markers=[];let tierColor={GREEN:'#16a34a',YELLOW:'#ca8a04',RED:'#dc2626'};sites.forEach((s,i)=>{let coords=zipCoords[s.zip_code];if(!coords)return;let score=scoreSite(s);let c=costAnalysis(s);let m=L.circleMarker(coords,{radius:12,fillColor:tierColor[score.tier],color:'white',weight:2,fillOpacity:0.9}).addTo(map);m.bindPopup(`<b>${s.name}</b><br>${s.address}<br><b>Score:</b> ${score.total.toFixed(1)}/100 (${score.tier})<br><b>Break-even:</b> ${c.breakEven} students<br><b>Margin:</b> ${c.margin>0?'$'+c.margin.toLocaleString():'—'}<br><button onclick="document.getElementById('btn-grid').click();setTimeout(()=>document.querySelector('[data-idx=\\''+i+'\\']')?.scrollIntoView({behavior:'smooth'}),100)" style="margin-top:8px;padding:4px 8px;cursor:pointer">View Card →</button>`);m.on('mouseover',function(){this.openPopup();});markers.push(m);});if(markers.length){let group=L.featureGroup(markers);map.fitBounds(group.getBounds().pad(0.1));}}
+function showView(v){document.getElementById('map').style.display=v==='map'?'block':'none';document.getElementById('grid').style.display=v==='grid'?'grid':'none';document.getElementById('kanban').style.display=v==='kanban'?'flex':'none';document.getElementById('btn-grid').classList.toggle('active',v==='grid');document.getElementById('btn-kanban').classList.toggle('active',v==='kanban');document.getElementById('btn-map').classList.toggle('active',v==='map');if(v==='map'){initMap();updateMarkers();setTimeout(()=>map.invalidateSize(),100);}if(v==='kanban')renderKanban();}
+
+let costChart=null;
+function showCostDetail(i){
+  let s=sites[i],c=costAnalysis(s);
+  document.getElementById('cost-site-name').textContent=s.name+' — Cost Breakdown';
+  document.getElementById('cost-total').textContent='$'+c.totalCost.toLocaleString();
+  document.getElementById('cost-breakeven').textContent=c.breakEven+' students';
+  document.getElementById('cost-capacity').textContent=c.capacity+' students';
+  let marginEl=document.getElementById('cost-margin');
+  if(c.margin>0){marginEl.style.background='#dcfce7';marginEl.innerHTML='<div style="font-size:1.25rem;font-weight:600;color:#16a34a">$'+c.margin.toLocaleString()+'</div><div style="font-size:0.75rem;color:#64748b">Potential Annual Margin at Capacity</div>';}
+  else{marginEl.style.background='#fef9c3';marginEl.innerHTML='<div style="font-size:1rem;font-weight:600;color:#ca8a04">Break-even exceeds capacity</div><div style="font-size:0.75rem;color:#64748b">Consider negotiating rent or increasing tuition</div>';}
+  document.getElementById('cost-details').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #3b82f6"><div style="font-weight:600">Rent — $${c.rent.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">$${s.monthly_rent.toLocaleString()}/mo × 12 months. Largest fixed cost; negotiate aggressively.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #8b5cf6"><div style="font-weight:600">Guide Salaries — $${c.guideSalary.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.guides} guide${c.guides>1?'s':''} × $110k. One guide per ~5,000 sqft for optimal coverage.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #ec4899"><div style="font-weight:600">Head of School — ${c.headOfSchool?'$'+c.headOfSchool.toLocaleString():'N/A'}</div><div style="font-size:0.8rem;color:#64748b">${c.headOfSchool?'Required when campus has 2+ guides for coordination.':'Not needed until campus scales to 2+ guides.'}</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #f97316"><div style="font-weight:600">Utilities — $${c.utilities.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Estimated at $3/sqft annually. Includes electric, water, internet.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #14b8a6"><div style="font-weight:600">Insurance — $${c.insurance.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">General liability + property insurance. May vary by location.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #eab308"><div style="font-weight:600">Marketing — $${c.marketing.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Grassroots outreach, events, digital ads for enrollment drives.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #22c55e"><div style="font-weight:600">Food Service — $${c.food.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.capacity} students × $1,500/year. Catering program (e.g., Sifted).</div></div>
+    </div>`;
+  if(costChart){costChart.destroy();}
+  costChart=new Chart(document.getElementById('costChart'),{type:'doughnut',data:{labels:['Rent','Guides','Head of School','Utilities','Insurance','Marketing','Food'],datasets:[{data:[c.rent,c.guideSalary,c.headOfSchool,c.utilities,c.insurance,c.marketing,c.food],backgroundColor:['#3b82f6','#8b5cf6','#ec4899','#f97316','#14b8a6','#eab308','#22c55e']}]},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+  document.getElementById('costModal').classList.add('active');
+}
+function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
+function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'☀️':'🌙';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='☀️';}
+document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
+render();}
+function deleteSite(){if(confirm('Delete?')){sites.splice(editingIndex,1);localStorage.setItem('alpha-sites',JSON.stringify(sites));closeModal();
+const zipCoords={"28211": [35.15, -80.82], "78723": [30.3, -97.69], "27609": [35.84, -78.63], "32819": [28.45, -81.49], "77056": [29.74, -95.46], "78521": [25.93, -97.48], "33155": [25.73, -80.31], "75201": [32.79, -96.8], "85253": [33.56, -111.89], "10038": [40.71, -74.0], "33480": [26.7, -80.04], "67401": [38.84, -97.61], "80202": [39.75, -104.99], "94105": [37.79, -122.39], "48210": [42.33, -83.11]};let map,markers=[];
+function initMap(){if(map)return;map=L.map('map').setView([39,-98],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+let legend=L.control({position:'bottomright'});legend.onAdd=function(){let d=L.DomUtil.create('div','map-legend');d.innerHTML='<div><span style="background:#16a34a"></span>Green (75+)</div><div><span style="background:#ca8a04"></span>Yellow (50-74)</div><div><span style="background:#dc2626"></span>Red (<50)</div>';return d;};legend.addTo(map);}
+function updateMarkers(){markers.forEach(m=>map.removeLayer(m));markers=[];let tierColor={GREEN:'#16a34a',YELLOW:'#ca8a04',RED:'#dc2626'};sites.forEach((s,i)=>{let coords=zipCoords[s.zip_code];if(!coords)return;let score=scoreSite(s);let c=costAnalysis(s);let m=L.circleMarker(coords,{radius:12,fillColor:tierColor[score.tier],color:'white',weight:2,fillOpacity:0.9}).addTo(map);m.bindPopup(`<b>${s.name}</b><br>${s.address}<br><b>Score:</b> ${score.total.toFixed(1)}/100 (${score.tier})<br><b>Break-even:</b> ${c.breakEven} students<br><b>Margin:</b> ${c.margin>0?'$'+c.margin.toLocaleString():'—'}<br><button onclick="document.getElementById('btn-grid').click();setTimeout(()=>document.querySelector('[data-idx=\\''+i+'\\']')?.scrollIntoView({behavior:'smooth'}),100)" style="margin-top:8px;padding:4px 8px;cursor:pointer">View Card →</button>`);m.on('mouseover',function(){this.openPopup();});markers.push(m);});if(markers.length){let group=L.featureGroup(markers);map.fitBounds(group.getBounds().pad(0.1));}}
+function showView(v){document.getElementById('map').style.display=v==='map'?'block':'none';document.getElementById('grid').style.display=v==='grid'?'grid':'none';document.getElementById('kanban').style.display=v==='kanban'?'flex':'none';document.getElementById('btn-grid').classList.toggle('active',v==='grid');document.getElementById('btn-kanban').classList.toggle('active',v==='kanban');document.getElementById('btn-map').classList.toggle('active',v==='map');if(v==='map'){initMap();updateMarkers();setTimeout(()=>map.invalidateSize(),100);}if(v==='kanban')renderKanban();}
+
+let costChart=null;
+function showCostDetail(i){
+  let s=sites[i],c=costAnalysis(s);
+  document.getElementById('cost-site-name').textContent=s.name+' — Cost Breakdown';
+  document.getElementById('cost-total').textContent='$'+c.totalCost.toLocaleString();
+  document.getElementById('cost-breakeven').textContent=c.breakEven+' students';
+  document.getElementById('cost-capacity').textContent=c.capacity+' students';
+  let marginEl=document.getElementById('cost-margin');
+  if(c.margin>0){marginEl.style.background='#dcfce7';marginEl.innerHTML='<div style="font-size:1.25rem;font-weight:600;color:#16a34a">$'+c.margin.toLocaleString()+'</div><div style="font-size:0.75rem;color:#64748b">Potential Annual Margin at Capacity</div>';}
+  else{marginEl.style.background='#fef9c3';marginEl.innerHTML='<div style="font-size:1rem;font-weight:600;color:#ca8a04">Break-even exceeds capacity</div><div style="font-size:0.75rem;color:#64748b">Consider negotiating rent or increasing tuition</div>';}
+  document.getElementById('cost-details').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #3b82f6"><div style="font-weight:600">Rent — $${c.rent.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">$${s.monthly_rent.toLocaleString()}/mo × 12 months. Largest fixed cost; negotiate aggressively.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #8b5cf6"><div style="font-weight:600">Guide Salaries — $${c.guideSalary.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.guides} guide${c.guides>1?'s':''} × $110k. One guide per ~5,000 sqft for optimal coverage.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #ec4899"><div style="font-weight:600">Head of School — ${c.headOfSchool?'$'+c.headOfSchool.toLocaleString():'N/A'}</div><div style="font-size:0.8rem;color:#64748b">${c.headOfSchool?'Required when campus has 2+ guides for coordination.':'Not needed until campus scales to 2+ guides.'}</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #f97316"><div style="font-weight:600">Utilities — $${c.utilities.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Estimated at $3/sqft annually. Includes electric, water, internet.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #14b8a6"><div style="font-weight:600">Insurance — $${c.insurance.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">General liability + property insurance. May vary by location.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #eab308"><div style="font-weight:600">Marketing — $${c.marketing.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Grassroots outreach, events, digital ads for enrollment drives.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #22c55e"><div style="font-weight:600">Food Service — $${c.food.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.capacity} students × $1,500/year. Catering program (e.g., Sifted).</div></div>
+    </div>`;
+  if(costChart){costChart.destroy();}
+  costChart=new Chart(document.getElementById('costChart'),{type:'doughnut',data:{labels:['Rent','Guides','Head of School','Utilities','Insurance','Marketing','Food'],datasets:[{data:[c.rent,c.guideSalary,c.headOfSchool,c.utilities,c.insurance,c.marketing,c.food],backgroundColor:['#3b82f6','#8b5cf6','#ec4899','#f97316','#14b8a6','#eab308','#22c55e']}]},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+  document.getElementById('costModal').classList.add('active');
+}
+function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
+function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'☀️':'🌙';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='☀️';}
+document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
+render();}}
+
+const zipCoords={"28211": [35.15, -80.82], "78723": [30.3, -97.69], "27609": [35.84, -78.63], "32819": [28.45, -81.49], "77056": [29.74, -95.46], "78521": [25.93, -97.48], "33155": [25.73, -80.31], "75201": [32.79, -96.8], "85253": [33.56, -111.89], "10038": [40.71, -74.0], "33480": [26.7, -80.04], "67401": [38.84, -97.61], "80202": [39.75, -104.99], "94105": [37.79, -122.39], "48210": [42.33, -83.11]};let map,markers=[];
+function initMap(){if(map)return;map=L.map('map').setView([39,-98],4);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap'}).addTo(map);
+let legend=L.control({position:'bottomright'});legend.onAdd=function(){let d=L.DomUtil.create('div','map-legend');d.innerHTML='<div><span style="background:#16a34a"></span>Green (75+)</div><div><span style="background:#ca8a04"></span>Yellow (50-74)</div><div><span style="background:#dc2626"></span>Red (<50)</div>';return d;};legend.addTo(map);}
+function updateMarkers(){markers.forEach(m=>map.removeLayer(m));markers=[];let tierColor={GREEN:'#16a34a',YELLOW:'#ca8a04',RED:'#dc2626'};sites.forEach((s,i)=>{let coords=zipCoords[s.zip_code];if(!coords)return;let score=scoreSite(s);let c=costAnalysis(s);let m=L.circleMarker(coords,{radius:12,fillColor:tierColor[score.tier],color:'white',weight:2,fillOpacity:0.9}).addTo(map);m.bindPopup(`<b>${s.name}</b><br>${s.address}<br><b>Score:</b> ${score.total.toFixed(1)}/100 (${score.tier})<br><b>Break-even:</b> ${c.breakEven} students<br><b>Margin:</b> ${c.margin>0?'$'+c.margin.toLocaleString():'—'}<br><button onclick="document.getElementById('btn-grid').click();setTimeout(()=>document.querySelector('[data-idx=\\''+i+'\\']')?.scrollIntoView({behavior:'smooth'}),100)" style="margin-top:8px;padding:4px 8px;cursor:pointer">View Card →</button>`);m.on('mouseover',function(){this.openPopup();});markers.push(m);});if(markers.length){let group=L.featureGroup(markers);map.fitBounds(group.getBounds().pad(0.1));}}
+function showView(v){document.getElementById('map').style.display=v==='map'?'block':'none';document.getElementById('grid').style.display=v==='grid'?'grid':'none';document.getElementById('kanban').style.display=v==='kanban'?'flex':'none';document.getElementById('btn-grid').classList.toggle('active',v==='grid');document.getElementById('btn-kanban').classList.toggle('active',v==='kanban');document.getElementById('btn-map').classList.toggle('active',v==='map');if(v==='map'){initMap();updateMarkers();setTimeout(()=>map.invalidateSize(),100);}if(v==='kanban')renderKanban();}
+
+let costChart=null;
+function showCostDetail(i){
+  let s=sites[i],c=costAnalysis(s);
+  document.getElementById('cost-site-name').textContent=s.name+' — Cost Breakdown';
+  document.getElementById('cost-total').textContent='$'+c.totalCost.toLocaleString();
+  document.getElementById('cost-breakeven').textContent=c.breakEven+' students';
+  document.getElementById('cost-capacity').textContent=c.capacity+' students';
+  let marginEl=document.getElementById('cost-margin');
+  if(c.margin>0){marginEl.style.background='#dcfce7';marginEl.innerHTML='<div style="font-size:1.25rem;font-weight:600;color:#16a34a">$'+c.margin.toLocaleString()+'</div><div style="font-size:0.75rem;color:#64748b">Potential Annual Margin at Capacity</div>';}
+  else{marginEl.style.background='#fef9c3';marginEl.innerHTML='<div style="font-size:1rem;font-weight:600;color:#ca8a04">Break-even exceeds capacity</div><div style="font-size:0.75rem;color:#64748b">Consider negotiating rent or increasing tuition</div>';}
+  document.getElementById('cost-details').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px">
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #3b82f6"><div style="font-weight:600">Rent — $${c.rent.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">$${s.monthly_rent.toLocaleString()}/mo × 12 months. Largest fixed cost; negotiate aggressively.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #8b5cf6"><div style="font-weight:600">Guide Salaries — $${c.guideSalary.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.guides} guide${c.guides>1?'s':''} × $110k. One guide per ~5,000 sqft for optimal coverage.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #ec4899"><div style="font-weight:600">Head of School — ${c.headOfSchool?'$'+c.headOfSchool.toLocaleString():'N/A'}</div><div style="font-size:0.8rem;color:#64748b">${c.headOfSchool?'Required when campus has 2+ guides for coordination.':'Not needed until campus scales to 2+ guides.'}</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #f97316"><div style="font-weight:600">Utilities — $${c.utilities.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Estimated at $3/sqft annually. Includes electric, water, internet.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #14b8a6"><div style="font-weight:600">Insurance — $${c.insurance.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">General liability + property insurance. May vary by location.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #eab308"><div style="font-weight:600">Marketing — $${c.marketing.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">Grassroots outreach, events, digital ads for enrollment drives.</div></div>
+      <div style="padding:12px;background:#f8fafc;border-radius:8px;border-left:3px solid #22c55e"><div style="font-weight:600">Food Service — $${c.food.toLocaleString()}</div><div style="font-size:0.8rem;color:#64748b">${c.capacity} students × $1,500/year. Catering program (e.g., Sifted).</div></div>
+    </div>`;
+  if(costChart){costChart.destroy();}
+  costChart=new Chart(document.getElementById('costChart'),{type:'doughnut',data:{labels:['Rent','Guides','Head of School','Utilities','Insurance','Marketing','Food'],datasets:[{data:[c.rent,c.guideSalary,c.headOfSchool,c.utilities,c.insurance,c.marketing,c.food],backgroundColor:['#3b82f6','#8b5cf6','#ec4899','#f97316','#14b8a6','#eab308','#22c55e']}]},options:{plugins:{legend:{position:'bottom',labels:{boxWidth:12,padding:8,font:{size:11}}}}}});
+  document.getElementById('costModal').classList.add('active');
+}
+function closeCostModal(){document.getElementById('costModal').classList.remove('active');}
+function toggleDark(){document.body.classList.toggle('dark');localStorage.setItem('dark',document.body.classList.contains('dark'));document.querySelector('.theme-toggle').textContent=document.body.classList.contains('dark')?'☀️':'🌙';}if(localStorage.getItem('dark')==='true'){document.body.classList.add('dark');document.querySelector('.theme-toggle').textContent='☀️';}
+document.getElementById('edit-notes').addEventListener('keydown',function(e){if((e.metaKey||e.ctrlKey)&&e.key==='Enter'){e.preventDefault();saveSite();}});
+render();
+
+function exportSites(){
+  let data=JSON.stringify(sites,null,2);
+  let blob=new Blob([data],{type:'application/json'});
+  let url=URL.createObjectURL(blob);
+  let a=document.createElement('a');
+  a.href=url;a.download='alpha-sites-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();URL.revokeObjectURL(url);
+  if(navigator.share&&/Mobi|Android/i.test(navigator.userAgent)){
+    navigator.share({title:'Alpha Sites Export',files:[new File([blob],'alpha-sites.json',{type:'application/json'})]}).catch(()=>{});
+  }
+}
+function importSites(e){
+  let file=e.target.files[0];if(!file)return;
+  let reader=new FileReader();
+  reader.onload=function(ev){
+    try{
+      let imported=JSON.parse(ev.target.result);
+      if(!Array.isArray(imported)){alert('Invalid format: expected array');return;}
+      let added=0,updated=0;
+      imported.forEach(s=>{
+        let idx=sites.findIndex(x=>x.name===s.name);
+        if(idx>=0){sites[idx]=s;updated++;}
+        else{sites.push(s);added++;}
+      });
+      localStorage.setItem('alpha-sites',JSON.stringify(sites));
+      render();
+      alert('Import complete: '+added+' added, '+updated+' updated');
+    }catch(err){alert('Invalid JSON file');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+let draggedIdx=null;
+function renderKanban(){
+  let stages=['Sourced','Site Visit','LOI','Negotiation','Signed'];
+  let tierClass={GREEN:'go',YELLOW:'caution',RED:'nogo'};
+  document.getElementById('kanban').innerHTML=stages.map(st=>{
+    let cards=sites.map((s,i)=>({site:s,idx:i,...scoreSite(s)})).filter(r=>(r.site.status||'Sourced')===st);
+    return`<div class="kanban-col" data-stage="${st}" ondragover="kanbanDragOver(event)" ondragleave="kanbanDragLeave(event)" ondrop="kanbanDrop(event)">
+      <h4>${st}<span>${cards.length}</span></h4>
+      ${cards.map(r=>`<div class="kanban-card ${tierClass[r.tier]}" draggable="true" data-idx="${r.idx}" onclick="editSite(${r.idx})" ondragstart="kanbanDragStart(event)" ondragend="kanbanDragEnd(event)">
+        <div style="font-weight:600;font-size:0.9rem">${r.site.name}</div>
+        <div style="font-size:0.75rem;color:#64748b">${r.site.address}</div>
+        <div style="font-size:0.8rem;margin-top:4px"><b>${r.total.toFixed(0)}</b>/100</div>
+      </div>`).join('')}
+    </div>`;
+  }).join('');
+}
+function kanbanDragStart(e){draggedIdx=parseInt(e.target.dataset.idx);e.target.classList.add('dragging');}
+function kanbanDragEnd(e){e.target.classList.remove('dragging');draggedIdx=null;}
+function kanbanDragOver(e){e.preventDefault();e.currentTarget.classList.add('drag-over');}
+function kanbanDragLeave(e){e.currentTarget.classList.remove('drag-over');}
+function kanbanDrop(e){
+  e.preventDefault();e.currentTarget.classList.remove('drag-over');
+  if(draggedIdx===null)return;
+  let newStage=e.currentTarget.dataset.stage;
+  sites[draggedIdx].status=newStage;
+  localStorage.setItem('alpha-sites',JSON.stringify(sites));
+  render();renderKanban();
+  draggedIdx=null;
+}
+</script><div class="modal" id="costModal"><div class="modal-content" style="max-width:600px">
+<h2 id="cost-site-name">Cost Breakdown</h2>
+<div style="display:flex;gap:24px;flex-wrap:wrap">
+<div style="flex:1;min-width:200px"><canvas id="costChart" height="200"></canvas></div>
+<div style="flex:1;min-width:200px">
+<div style="font-size:1.5rem;font-weight:700;color:#0f172a" id="cost-total"></div>
+<div style="color:#64748b;margin-bottom:16px">Annual Operating Cost</div>
+<div style="display:flex;gap:16px;margin-bottom:16px">
+<div style="text-align:center;padding:12px;background:#dcfce7;border-radius:8px;flex:1"><div style="font-size:1.25rem;font-weight:600;color:#16a34a" id="cost-breakeven"></div><div style="font-size:0.75rem;color:#64748b">Break-even</div></div>
+<div style="text-align:center;padding:12px;background:#f1f5f9;border-radius:8px;flex:1"><div style="font-size:1.25rem;font-weight:600" id="cost-capacity"></div><div style="font-size:0.75rem;color:#64748b">Capacity</div></div>
+</div>
+<div id="cost-margin" style="padding:12px;border-radius:8px;text-align:center;margin-bottom:16px"></div>
+</div>
+</div>
+<div id="cost-details" style="margin-top:16px;border-top:1px solid #e2e8f0;padding-top:16px"></div>
+<div class="btn-row"><button class="btn btn-secondary" onclick="closeCostModal()">Close</button></div>
+</div></div></body></html>
