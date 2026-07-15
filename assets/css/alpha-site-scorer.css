@@ -1,0 +1,216 @@
+body.alpha-site-scorer {
+	background: #ffffff;
+	color: #585858;
+}
+
+body.alpha-site-scorer #header {
+	margin: 0;
+	padding: 8em 0 0.1em;
+	text-align: left;
+}
+
+body.alpha-site-scorer #header .inner,
+body.alpha-site-scorer #footer .inner {
+	max-width: 68em;
+}
+
+body.alpha-site-scorer #main {
+	background: #ffffff;
+	margin: 0;
+	padding: 0;
+}
+
+body.alpha-site-scorer #main > .inner {
+	max-width: 68em;
+	padding-top: 3.5em;
+	padding-bottom: 3.5em;
+}
+
+body.alpha-site-scorer #footer {
+	color: #585858;
+	font-size: 1em;
+	margin: 0;
+	text-align: left;
+}
+
+body.alpha-site-scorer .container {
+	max-width: none;
+	padding: 0;
+}
+
+body.alpha-site-scorer .dashboard-header {
+	border-bottom: solid 1px #c9c9c9;
+	margin: 0 0 2em;
+	padding: 0 0 1.5em;
+	text-align: left;
+}
+
+body.alpha-site-scorer .dashboard-header h1 {
+	color: #585858;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 2.3em;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	line-height: 1.3;
+	margin: 0 0 0.25em;
+	text-transform: uppercase;
+}
+
+body.alpha-site-scorer .subtitle {
+	color: #777777;
+	font-size: 1em;
+	letter-spacing: 0.05em;
+	margin: 0;
+}
+
+body.alpha-site-scorer .theme-toggle {
+	background: #585858;
+	border-radius: 4px;
+	color: #ffffff;
+	float: right;
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 0.8em;
+	letter-spacing: 0.1em;
+	margin: 0 0 1.25em 1em;
+	padding: 0.55em 0.9em;
+	position: static;
+	text-transform: uppercase;
+}
+
+body.alpha-site-scorer .theme-toggle:hover {
+	background: #f2849e;
+}
+
+body.alpha-site-scorer .summary,
+body.alpha-site-scorer .funnel {
+	justify-content: flex-start;
+}
+
+body.alpha-site-scorer .stat-box,
+body.alpha-site-scorer .funnel-stage,
+body.alpha-site-scorer .card,
+body.alpha-site-scorer .kanban-col,
+body.alpha-site-scorer .kanban-card,
+body.alpha-site-scorer .modal-content {
+	background: #ffffff;
+	border: solid 1px #c9c9c9;
+	border-radius: 4px;
+	box-shadow: none;
+}
+
+body.alpha-site-scorer .stat-box {
+	min-width: 10em;
+	padding: 1em 1.25em;
+}
+
+body.alpha-site-scorer .funnel-stage {
+	padding: 0.8em 1em;
+}
+
+body.alpha-site-scorer .funnel-stage::after {
+	color: #585858;
+}
+
+body.alpha-site-scorer .card {
+	border-left-width: 4px;
+	padding: 1.25em;
+}
+
+body.alpha-site-scorer .card h2 {
+	color: #585858;
+	font-size: 1.1em;
+	font-weight: 600;
+	margin: 0 0 0.25em;
+	padding-right: 5em;
+}
+
+body.alpha-site-scorer .card:hover,
+body.alpha-site-scorer .kanban-card:hover {
+	box-shadow: inset 0 0 0 1px #f2849e;
+	transform: none;
+}
+
+body.alpha-site-scorer .rank,
+body.alpha-site-scorer .cost span,
+body.alpha-site-scorer .view-toggle button,
+body.alpha-site-scorer .detail-btn,
+body.alpha-site-scorer .btn-secondary {
+	background: #ffffff;
+	border: solid 1px #c9c9c9;
+	border-radius: 4px;
+	color: #585858;
+}
+
+body.alpha-site-scorer .btn,
+body.alpha-site-scorer .view-toggle button {
+	font-family: "Source Sans Pro", Helvetica, sans-serif;
+	font-size: 0.8em;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+}
+
+body.alpha-site-scorer .btn-primary,
+body.alpha-site-scorer .view-toggle button.active {
+	background: #585858;
+	border-color: #585858;
+	color: #ffffff;
+}
+
+body.alpha-site-scorer .btn-primary:hover,
+body.alpha-site-scorer .view-toggle button:hover,
+body.alpha-site-scorer .detail-btn:hover {
+	background: #f2849e;
+	border-color: #f2849e;
+	color: #ffffff;
+}
+
+body.alpha-site-scorer .map-legend {
+	border: solid 1px #c9c9c9;
+	border-radius: 4px;
+	box-shadow: none;
+}
+
+body.alpha-site-scorer #map {
+	border: solid 1px #c9c9c9;
+	border-radius: 4px;
+}
+
+body.alpha-site-scorer.dark,
+body.alpha-site-scorer.dark #main {
+	background: #333333;
+	color: #ffffff;
+}
+
+body.alpha-site-scorer.dark #header,
+body.alpha-site-scorer.dark #footer {
+	background: #333333;
+	color: #ffffff;
+}
+
+body.alpha-site-scorer.dark .dashboard-header {
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+body.alpha-site-scorer.dark .dashboard-header h1,
+body.alpha-site-scorer.dark .subtitle {
+	color: #ffffff;
+}
+
+@media screen and (max-width: 736px) {
+	body.alpha-site-scorer #header {
+		padding-top: 5em;
+	}
+
+	body.alpha-site-scorer #main > .inner {
+		padding-top: 2.5em;
+	}
+
+	body.alpha-site-scorer .dashboard-header h1 {
+		font-size: 1.75em;
+	}
+
+	body.alpha-site-scorer .theme-toggle {
+		margin-bottom: 1em;
+	}
+}

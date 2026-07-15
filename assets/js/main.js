@@ -199,10 +199,11 @@
 			if (!$menu.children('.inner').length) {
 				$menu.wrapInner('<div class="inner"></div>');
 			}
-			var cacheBuster = 'v=' + Date.now();
-			$menu.children('.inner').load('menu.html?' + cacheBuster, function(response, status, xhr) {
+			var cacheBuster = 'v=' + Date.now(),
+				menuSource = $menu.attr('data-menu-src') || 'menu.html';
+			$menu.children('.inner').load(menuSource + '?' + cacheBuster, function(response, status, xhr) {
 				if (status == "error") {
-					console.log("Error loading menu.html: " + xhr.status + " " + xhr.statusText);
+					console.log("Error loading " + menuSource + ": " + xhr.status + " " + xhr.statusText);
 				} else {
 					// Mark as loaded to prevent multiple loads if script is run again
 					$menu.data('loaded', true);
