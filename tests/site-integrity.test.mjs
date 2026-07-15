@@ -34,6 +34,14 @@ test('global stylesheet provides a visible keyboard focus indicator', () => {
   assert.match(mainStyles, /:focus-visible\s*\{[\s\S]*?outline:\s*3px solid #f2849e;/);
 });
 
+test('root portfolio pages keep their wrapper div markup balanced', () => {
+  for (const [index, page] of pageContents.entries()) {
+    const openingDivs = page.match(/<div\b/g)?.length ?? 0;
+    const closingDivs = page.match(/<\/div>/g)?.length ?? 0;
+    assert.equal(openingDivs, closingDivs, `${pages[index]} has unbalanced div markup`);
+  }
+});
+
 test('all root-relative local asset references resolve', () => {
   for (const [index, page] of pageContents.entries()) {
     const references = page.matchAll(/(?:href|src)="([^"]+)"/g);
