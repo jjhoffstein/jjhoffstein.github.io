@@ -2553,6 +2553,18 @@ input, select, textarea {
 				background-color: #ee5f81;
 			}
 
+	@media screen and (max-width: 480px) {
+
+		.alpha-site-scorer-link {
+			font-size: 0.7em;
+			letter-spacing: 0.2em;
+			max-width: 100%;
+			padding-left: 1.25em;
+			padding-right: 1em;
+		}
+
+	}
+
 		input[type="submit"].disabled, input[type="submit"]:disabled,
 		input[type="reset"].disabled,
 		input[type="reset"]:disabled,
