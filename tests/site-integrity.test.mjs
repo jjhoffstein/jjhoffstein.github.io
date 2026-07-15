@@ -42,6 +42,30 @@ test('root portfolio pages keep their wrapper div markup balanced', () => {
   }
 });
 
+test('portfolio footers remain inside the shared page wrapper', () => {
+  for (const [index, page] of pageContents.entries()) {
+    const tags = page.match(/<\/?(?:div|footer)\b[^>]*>/gi) ?? [];
+    const divStack = [];
+    let hasFooter = false;
+
+    for (const tag of tags) {
+      if (tag.startsWith('</div')) {
+        divStack.pop();
+      } else if (tag.startsWith('<div')) {
+        divStack.push(tag);
+      } else if (tag.startsWith('<footer')) {
+        hasFooter = true;
+        assert.ok(
+          divStack.some((div) => /\bid\s*=\s*["']wrapper["']/i.test(div)),
+          `${pages[index]} places its footer outside #wrapper`,
+        );
+      }
+    }
+
+    if (pages[index] === 'menu.html') assert.equal(hasFooter, false);
+  }
+});
+
 test('all root-relative local asset references resolve', () => {
   for (const [index, page] of pageContents.entries()) {
     const references = page.matchAll(/(?:href|src)="([^"]+)"/g);
