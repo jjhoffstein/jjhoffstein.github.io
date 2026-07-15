@@ -44,6 +44,13 @@ test('dashboard button styles distinguish default, hover, and active states', ()
   assert.match(dashboardStyles, /\.view-toggle button\.active \{[\s\S]*background: #f2849e;[\s\S]*color: #ffffff !important;/);
 });
 
+test('dashboard action controls and score summaries use deliberate shared grouping', () => {
+  assert.match(page, /<div class="action-controls">[\s\S]*<button class="btn btn-secondary" onclick="exportSites\(\)">Export<\/button>[\s\S]*<label class="btn btn-secondary">Import/);
+  assert.match(page, /<div class="score-summary"><div class="score">\$\{r\.total\.toFixed\(1\)\}<span>\/100<\/span><\/div><div class="score-bar">/);
+  assert.match(dashboardStyles, /\.action-controls \.btn \{[\s\S]*display: inline-flex;/);
+  assert.match(dashboardStyles, /\.score-summary \{[\s\S]*margin: 1em 0 0\.75em;/);
+});
+
 test('dashboard prevents horizontal overflow on narrow screens', () => {
   assert.match(dashboardStyles, /@media screen and \(max-width: 736px\)[\s\S]*\.funnel-stage::after[\s\S]*display: none;/);
   assert.match(dashboardStyles, /@media screen and \(max-width: 736px\)[\s\S]*\.grid \{[\s\S]*grid-template-columns: minmax\(0, 1fr\);/);
