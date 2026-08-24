@@ -10,6 +10,20 @@ const pageContents = pages.map((page) => readFileSync(new URL(`../${page}`, impo
 const mainStyles = readFileSync(new URL('../assets/css/main.css', import.meta.url), 'utf8');
 const iconStylesSource = readFileSync(new URL('../assets/sass/components/_icon.scss', import.meta.url), 'utf8');
 
+function getHtmlAttribute(tag, name) {
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const match = tag.match(
+    new RegExp(`(?:^|\\s)${escapedName}\\s*=\\s*(?:"([^"]*)"|'([^']*)')`, 'i'),
+  );
+  return match?.[1] ?? match?.[2];
+}
+
+function getClassTokens(tag) {
+  return new Set(
+    (getHtmlAttribute(tag, 'class') ?? '').trim().split(/\s+/).filter(Boolean),
+  );
+}
+
 function relativeLuminance([red, green, blue]) {
   const channels = [red, green, blue].map((channel) => {
     const normalized = channel / 255;
@@ -137,6 +151,93 @@ test('icon-only links provide explicit accessible names', () => {
         `${page} icon link for ${label} needs a matching aria-label`,
       );
     }
+  }
+});
+
+test('every portfolio footer uses the canonical social links in order', () => {
+  const expectedFooterLinks = [
+    {
+      label: 'LinkedIn',
+      href: 'https://www.linkedin.com/in/jj-hoffstein-9433921b',
+      classes: ['icon', 'brands', 'style2', 'fa-linkedin-in'],
+    },
+    {
+      label: 'GitHub',
+      href: 'https://github.com/jjhoffstein',
+      classes: ['icon', 'brands', 'style2', 'fa-github'],
+    },
+    {
+      label: 'Twitter',
+      href: 'https://www.twitter.com/jjhoffstein',
+      classes: ['icon', 'brands', 'style2', 'fa-twitter'],
+    },
+    {
+      label: 'Email',
+      href: 'mailto:jjhoffstein@gmail.com',
+      classes: ['icon', 'solid', 'style2', 'fa-envelope'],
+    },
+  ];
+  const footerPages = readdirSync(rootPath, { recursive: true })
+    .filter((page) => page.endsWith('.html') && page !== 'menu.html')
+    .map((page) => [
+      page,
+      readFileSync(new URL(`../${page}`, import.meta.url), 'utf8'),
+    ]);
+
+  for (const [page, contents] of footerPages) {
+    const footers = [...contents.matchAll(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi)];
+    assert.equal(footers.length, 1, `${page} should contain exactly one footer`);
+
+    const lists = [...footers[0][0].matchAll(/(<ul\b[^>]*>)([\s\S]*?)<\/ul>/gi)]
+      .filter(([, tag]) => getClassTokens(tag).has('icons'));
+    assert.equal(lists.length, 1, `${page} footer should contain one social icon list`);
+
+    const items = [...lists[0][2].matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)];
+    assert.equal(
+      items.length,
+      expectedFooterLinks.length,
+      `${page} footer should contain exactly four social links`,
+    );
+
+    items.forEach((item, index) => {
+      const expected = expectedFooterLinks[index];
+      const anchors = [...item[1].matchAll(/(<a\b[^>]*>)([\s\S]*?)<\/a>/gi)];
+      assert.equal(anchors.length, 1, `${page} ${expected.label} item should contain one link`);
+
+      const [, openingTag, body] = anchors[0];
+      const labelSpans = [...body.matchAll(/(<span\b[^>]*>)([\s\S]*?)<\/span>/gi)]
+        .filter(([, tag]) => getClassTokens(tag).has('label'));
+      assert.equal(
+        labelSpans.length,
+        1,
+        `${page} ${expected.label} link should contain one hidden label`,
+      );
+
+      const hiddenLabel = labelSpans[0][2].replace(/<[^>]+>/g, '').trim();
+      assert.equal(
+        getHtmlAttribute(openingTag, 'href'),
+        expected.href,
+        `${page} ${expected.label} link has the wrong destination`,
+      );
+      assert.equal(
+        getHtmlAttribute(openingTag, 'aria-label'),
+        expected.label,
+        `${page} ${expected.label} link has the wrong aria-label`,
+      );
+      assert.equal(
+        hiddenLabel,
+        expected.label,
+        `${page} ${expected.label} link has the wrong hidden label`,
+      );
+
+      const classes = getClassTokens(openingTag);
+      for (const className of expected.classes) {
+        assert.ok(
+          classes.has(className),
+          `${page} ${expected.label} link is missing .${className}`,
+        );
+      }
+    });
   }
 });
 
