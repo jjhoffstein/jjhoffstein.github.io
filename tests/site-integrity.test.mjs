@@ -259,6 +259,11 @@ test('every portfolio footer uses the canonical social links in order', () => {
   for (const [page, contents] of footerPages) {
     const footers = [...contents.matchAll(/<footer\b[^>]*>[\s\S]*?<\/footer>/gi)];
     assert.equal(footers.length, 1, `${page} should contain exactly one footer`);
+    assert.match(
+      footers[0][0],
+      /<h2>\s*Contact\s*<\/h2>/i,
+      `${page} footer should use the shared Contact heading`,
+    );
 
     const lists = [...footers[0][0].matchAll(/(<ul\b[^>]*>)([\s\S]*?)<\/ul>/gi)]
       .filter(([, tag]) => getClassTokens(tag).has('icons'));
