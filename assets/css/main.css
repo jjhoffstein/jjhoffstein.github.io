@@ -1825,7 +1825,13 @@ input, select, textarea {
 		}
 
 		.icon > .label {
-			display: none;
+			clip-path: inset(100%);
+			clip: rect(1px, 1px, 1px, 1px);
+			height: 1px;
+			overflow: hidden;
+			position: absolute;
+			white-space: nowrap;
+			width: 1px;
 		}
 
 		.icon:before {
@@ -3221,7 +3227,7 @@ input, select, textarea {
 				margin-top: 5em;
 				list-style: none;
 				font-size: 0.8em;
-				color: rgba(88, 88, 88, 0.5);
+				color: rgba(88, 88, 88, 0.9);
 			}
 
 				#footer > .inner .copyright a {
