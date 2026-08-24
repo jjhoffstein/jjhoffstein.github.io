@@ -78,6 +78,31 @@ test('icon labels stay available to assistive technology while visually hidden',
   assert.match(iconStylesSource, /> \.label\s*\{[\s\S]*?clip-path:\s*inset\(100%\)/);
 });
 
+test('icon-only links provide explicit accessible names', () => {
+  const iconPages = [
+    ...pages.map((page, index) => [page, pageContents[index]]),
+    ['alpha-site-scorer/index.html', readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8')],
+  ];
+
+  for (const [page, contents] of iconPages) {
+    const iconLinks = contents.matchAll(
+      /(<a\b[^>]*\bclass="[^"]*\bicon\b[^"]*"[^>]*>)([\s\S]*?)<\/a>/g,
+    );
+
+    for (const match of iconLinks) {
+      const label = match[2].match(/<span class="label">([^<]+)<\/span>/)?.[1];
+      if (!label) continue;
+
+      const accessibleName = match[1].match(/\baria-label="([^"]+)"/)?.[1];
+      assert.equal(
+        accessibleName,
+        label,
+        `${page} icon link for ${label} needs a matching aria-label`,
+      );
+    }
+  }
+});
+
 test('footer copyright and legal text meets WCAG AA contrast', () => {
   const backgroundMatch = mainStyles.match(/#footer\s*\{[\s\S]*?background-color:\s*#([0-9a-f]{6});/i);
   const foregroundMatch = mainStyles.match(
