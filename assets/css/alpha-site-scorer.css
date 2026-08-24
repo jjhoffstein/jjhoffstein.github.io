@@ -45,6 +45,14 @@ body.alpha-site-scorer .dashboard-header {
 	text-align: left;
 }
 
+body.alpha-site-scorer .data-warning {
+	margin: 0 0 1.5em;
+	padding: 0.75em 1em;
+	border-left: 4px solid #b45309;
+	background: #fef3c7;
+	color: #78350f;
+}
+
 body.alpha-site-scorer .dashboard-header h1 {
 	color: #585858;
 	font-family: "Source Sans Pro", Helvetica, sans-serif;
@@ -108,7 +116,7 @@ body.alpha-site-scorer .card h2 {
 
 body.alpha-site-scorer .card:hover,
 body.alpha-site-scorer .kanban-card:hover {
-	box-shadow: inset 0 0 0 1px #f2849e;
+	box-shadow: inset 0 0 0 1px #c13d5b;
 	transform: none;
 }
 
@@ -141,8 +149,8 @@ body.alpha-site-scorer .btn-primary {
 
 body.alpha-site-scorer .btn-primary:hover,
 body.alpha-site-scorer .btn-primary:focus-visible {
-	background: #f2849e;
-	border-color: #f2849e;
+	background: #c13d5b;
+	border-color: #c13d5b;
 	color: #ffffff !important;
 }
 
@@ -153,27 +161,27 @@ body.alpha-site-scorer .detail-btn:focus-visible,
 body.alpha-site-scorer .btn-secondary:hover,
 body.alpha-site-scorer .btn-secondary:focus-visible {
 	background: #fde7ed;
-	border-color: #f2849e;
+	border-color: #c13d5b;
 	color: #585858 !important;
 }
 
 body.alpha-site-scorer .view-toggle button.active {
-	background: #f2849e;
-	border-color: #f2849e;
+	background: #c13d5b;
+	border-color: #c13d5b;
 	color: #ffffff !important;
 }
 
 body.alpha-site-scorer .view-toggle button.active:hover,
 body.alpha-site-scorer .view-toggle button.active:focus-visible {
-	background: #ee5f81;
-	border-color: #ee5f81;
+	background: #a2334c;
+	border-color: #a2334c;
 	color: #ffffff !important;
 }
 
 body.alpha-site-scorer .btn:focus-visible,
 body.alpha-site-scorer .view-toggle button:focus-visible,
 body.alpha-site-scorer .detail-btn:focus-visible {
-	outline: solid 3px rgba(242, 132, 158, 0.35);
+	outline: solid 3px #c13d5b;
 	outline-offset: 2px;
 }
 

@@ -8,7 +8,10 @@ const rootPath = root.pathname;
 const pages = readdirSync(rootPath).filter((file) => file.endsWith('.html'));
 const pageContents = pages.map((page) => readFileSync(new URL(`../${page}`, import.meta.url), 'utf8'));
 const mainStyles = readFileSync(new URL('../assets/css/main.css', import.meta.url), 'utf8');
+const alphaStyles = readFileSync(new URL('../assets/css/alpha-site-scorer.css', import.meta.url), 'utf8');
+const menuMarkup = readFileSync(new URL('../menu.html', import.meta.url), 'utf8');
 const iconStylesSource = readFileSync(new URL('../assets/sass/components/_icon.scss', import.meta.url), 'utf8');
+const paletteSource = readFileSync(new URL('../assets/sass/libs/_vars.scss', import.meta.url), 'utf8');
 
 function getHtmlAttribute(tag, name) {
   const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -41,6 +44,19 @@ function contrastRatio(firstColor, secondColor) {
   const lighter = Math.max(firstLuminance, secondLuminance);
   const darker = Math.min(firstLuminance, secondLuminance);
   return (lighter + 0.05) / (darker + 0.05);
+}
+
+function hexToRgb(hex) {
+  return hex.match(/[0-9a-f]{2}/gi).map((channel) => Number.parseInt(channel, 16));
+}
+
+function rulePropertyHex(styles, rulePattern, property) {
+  const body = styles.match(rulePattern)?.[1] ?? '';
+  const escapedProperty = property.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const color = body.match(new RegExp(`${escapedProperty}:\\s*[^;]*(#[0-9a-f]{6})`, 'i'))?.[1];
+
+  assert.ok(color, `Expected ${property} color in ${rulePattern}`);
+  return hexToRgb(color);
 }
 
 test('site provides crawler and privacy documents', () => {
@@ -94,7 +110,63 @@ test('indexable project pages use Digital Portfolio branding', () => {
 });
 
 test('global stylesheet provides a visible keyboard focus indicator', () => {
-  assert.match(mainStyles, /:focus-visible\s*\{[\s\S]*?outline:\s*3px solid #f2849e;/);
+  assert.match(mainStyles, /:focus-visible\s*\{[\s\S]*?outline:\s*3px solid #[0-9a-f]{6};/i);
+});
+
+test('shared interactive colors meet WCAG contrast on their actual surfaces', () => {
+  const white = rulePropertyHex(mainStyles, /\bbody\s*\{([^}]*background:[^}]*)\}/, 'background');
+  const footer = rulePropertyHex(mainStyles, /#footer\s*\{([^}]*background-color:[^}]*)\}/, 'background-color');
+  const menu = rulePropertyHex(mainStyles, /#menu\s*\{([^}]*background:[^}]*)\}/, 'background');
+  const cases = [
+    ['hovered links', /\ba:hover\s*\{([^}]*)\}/, 'color', white, 4.5],
+    ['global focus outline', /:focus-visible\s*\{([^}]*)\}/, 'outline', white, 3],
+    ['footer social icons', /\.icon\.style2:hover\s*\{([^}]*)\}/, 'color', footer, 3],
+    ['form focus border', /textarea:focus\s*\{([^}]*)\}/, 'border-bottom-color', white, 3],
+    ['choice focus border', /input\[type="radio"\]:focus \+ label:before\s*\{([^}]*)\}/, 'border-color', white, 3],
+    ['generic button hover text', /\.button:hover\s*\{([^}]*)\}/, 'color', white, 4.5],
+    ['primary button hover', /\.button\.primary:hover\s*\{([^}]*)\}/, 'background-color', white, 4.5],
+    ['primary button active', /\.button\.primary:active\s*\{([^}]*)\}/, 'background-color', white, 4.5],
+    ['menu link focus outline', /#menu > \.inner :focus-visible\s*\{([^}]*)\}/, 'outline-color', menu, 3],
+  ];
+
+  for (const [label, rule, property, background, minimum] of cases) {
+    const ratio = contrastRatio(rulePropertyHex(mainStyles, rule, property), background);
+    assert.ok(ratio >= minimum, `${label} contrast ${ratio.toFixed(2)} must be at least ${minimum}:1`);
+  }
+
+  const menuHoverRatio = contrastRatio(
+    rulePropertyHex(menuMarkup, /#menu a:hover\s*\{([^}]*)\}/, 'color'),
+    menu,
+  );
+  assert.ok(menuHoverRatio >= 4.5, `menu hover text contrast ${menuHoverRatio.toFixed(2)} must be at least 4.5:1`);
+
+  const sassInteractive = paletteSource.match(/accent1-interactive:\s*(#[0-9a-f]{6})/i)?.[1];
+  assert.ok(sassInteractive, 'Sass palette is missing accent1-interactive');
+  assert.deepEqual(
+    rulePropertyHex(mainStyles, /\ba:hover\s*\{([^}]*)\}/, 'color'),
+    hexToRgb(sassInteractive),
+    'served and Sass interactive pinks must match',
+  );
+  assert.doesNotMatch(mainStyles, /#menu :focus-visible\s*\{/,
+    'the close control sits on white and must keep the global focus color');
+});
+
+test('Alpha dashboard interactive colors meet WCAG contrast', () => {
+  const white = [255, 255, 255];
+  const palePink = [253, 231, 237];
+  const cases = [
+    ['card hover edge', /\.kanban-card:hover\s*\{([^}]*)\}/, 'box-shadow', white, 3],
+    ['primary hover', /\.btn-primary:focus-visible\s*\{([^}]*)\}/, 'background', white, 4.5],
+    ['secondary focus border', /\.btn-secondary:focus-visible\s*\{([^}]*)\}/, 'border-color', palePink, 3],
+    ['active view', /\.view-toggle button\.active\s*\{([^}]*)\}/, 'background', white, 4.5],
+    ['active view focus', /\.view-toggle button\.active:focus-visible\s*\{([^}]*)\}/, 'background', white, 4.5],
+    ['control focus outline', /\.detail-btn:focus-visible\s*\{([^}]*)\}/, 'outline', white, 3],
+  ];
+
+  for (const [label, rule, property, background, minimum] of cases) {
+    const ratio = contrastRatio(rulePropertyHex(alphaStyles, rule, property), background);
+    assert.ok(ratio >= minimum, `${label} contrast ${ratio.toFixed(2)} must be at least ${minimum}:1`);
+  }
 });
 
 test('icon labels stay available to assistive technology while visually hidden', () => {
