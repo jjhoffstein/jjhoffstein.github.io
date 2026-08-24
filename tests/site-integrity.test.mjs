@@ -91,7 +91,12 @@ test('icon-only links provide explicit accessible names', () => {
 
     for (const match of iconLinks) {
       const className = match[1].match(/\bclass="([^"]*)"/)?.[1] ?? '';
-      if (/\bbutton\b/.test(className)) continue;
+      const classTokens = className.trim().split(/\s+/);
+      const visibleText = match[2]
+        .replace(/<span class="label">[\s\S]*?<\/span>/g, '')
+        .replace(/<[^>]+>/g, '')
+        .trim();
+      if (classTokens.includes('button') && visibleText) continue;
 
       const label = match[2].match(/<span class="label">([^<]+)<\/span>/)?.[1];
       const href = match[1].match(/\bhref="([^"]+)"/)?.[1] ?? 'unknown destination';
