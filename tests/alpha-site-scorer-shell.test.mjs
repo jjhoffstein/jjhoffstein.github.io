@@ -60,3 +60,27 @@ test('site cards follow the page heading hierarchy', () => {
   assert.match(page, /<h2>\$\{s\.name\}<\/h2>/);
   assert.doesNotMatch(page, /<h3>\$\{s\.name\}<\/h3>/);
 });
+
+test('dashboard keeps one global implementation of its map and cost controls', () => {
+  const functionNames = [
+    'initMap',
+    'updateMarkers',
+    'showView',
+    'showCostDetail',
+    'closeCostModal',
+  ];
+
+  for (const functionName of functionNames) {
+    const definitions = page.match(new RegExp(`function ${functionName}\\(`, 'g')) ?? [];
+    assert.equal(
+      definitions.length,
+      1,
+      `${functionName} should be defined exactly once`,
+    );
+  }
+
+  const noteSaveHandlers = page.match(
+    /document\.getElementById\('edit-notes'\)\.addEventListener\('keydown'/g,
+  ) ?? [];
+  assert.equal(noteSaveHandlers.length, 1, 'the notes shortcut should be registered once');
+});
