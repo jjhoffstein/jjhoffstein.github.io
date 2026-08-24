@@ -57,6 +57,28 @@ test('portfolio pages declare essential language and search metadata', () => {
   }
 });
 
+test('indexable project pages use Digital Portfolio branding', () => {
+  const projectPages = [
+    'two_phase_timer.html',
+    'basketball_snake.html',
+    'basketball_analytics.html',
+    'alpha-site-scorer.html',
+  ];
+
+  for (const pageName of projectPages) {
+    const page = pageContents[pages.indexOf(pageName)];
+    assert.match(page, /<title>[^<]*JJ Hoffstein Digital Portfolio<\/title>/,
+      `${pageName} does not use Digital Portfolio branding in its title`);
+    assert.doesNotMatch(page, /Basketball Portfolio/,
+      `${pageName} still uses the old Basketball Portfolio branding`);
+  }
+
+  const snakePage = pageContents[pages.indexOf('basketball_snake.html')];
+  const snakeHead = snakePage.match(/<head>[\s\S]*?<\/head>/)?.[0] ?? '';
+  assert.doesNotMatch(snakeHead, /AI[- ]powered/i,
+    'basketball_snake.html still uses AI-powered branding in its metadata');
+});
+
 test('global stylesheet provides a visible keyboard focus indicator', () => {
   assert.match(mainStyles, /:focus-visible\s*\{[\s\S]*?outline:\s*3px solid #f2849e;/);
 });
