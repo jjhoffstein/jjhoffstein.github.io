@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-  <url>
-    <loc>https://jjhoffstein.github.io/</loc>
-    <image:image>
-      <image:loc>https://jjhoffstein.github.io/images/jj-hoffstein-headshot.jpeg</image:loc>
-    </image:image>
-  </url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://jjhoffstein.github.io/</loc></url>
   <url><loc>https://jjhoffstein.github.io/two_phase_timer.html</loc></url>
   <url><loc>https://jjhoffstein.github.io/basketball_snake.html</loc></url>
   <url><loc>https://jjhoffstein.github.io/basketball_analytics.html</loc></url>
   <url><loc>https://jjhoffstein.github.io/alpha-site-scorer/</loc></url>
   <url><loc>https://jjhoffstein.github.io/alpha-site-scorer.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/archive.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/coaching_philosophy.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/basketball_philosophy.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/practice_philosophy.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/strength_and_conditioning_philosophy.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/fun_stuff.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/moreyball.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/book_pantheon.html</loc></url>
-  <url><loc>https://jjhoffstein.github.io/gen_z.html</loc></url>
   <url><loc>https://jjhoffstein.github.io/privacy.html</loc></url>
 </urlset>
