@@ -27,6 +27,10 @@
 		visibility: hidden;
 		z-index: _misc(z-index-base) + 2;
 
+		> .inner :focus-visible {
+			outline-color: _palette(accent2-interactive);
+		}
+
 		> .inner {
 			@include vendor('transition', 'opacity #{_duration(menu)} ease');
 			-webkit-overflow-scrolling: touch;
@@ -58,7 +62,7 @@
 						@include vendor('transition', 'color #{_duration(transition)} ease'); // Add transition for color change
 
 						&:hover {
-							color: _palette(accent2) !important; // Change to accent2 color on hover (a light blue)
+							color: _palette(accent2-interactive) !important; // Use the accessible light blue on hover
 														// Using !important here too, to ensure it overrides global hover if necessary
 
 						}
@@ -109,7 +113,7 @@
 			}
 
 			&:before {
-				background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" preserveAspectRatio="none"><style>line { stroke-width: 8px; stroke: #{_palette(accent1)}; }</style><line x1="15" y1="15" x2="85" y2="85" /><line x1="85" y1="15" x2="15" y2="85" /></svg>');
+				background-image: svg-url('<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100" preserveAspectRatio="none"><style>line { stroke-width: 8px; stroke: #{_palette(accent1-interactive)}; }</style><line x1="15" y1="15" x2="85" y2="85" /><line x1="85" y1="15" x2="15" y2="85" /></svg>');
 				opacity: 0;
 			}
 

@@ -61,12 +61,12 @@
 			}
 
 			&:hover {
-				color: _palette(accent1);
-				border-color: _palette(accent1);
+				color: _palette(accent1-interactive);
+				border-color: _palette(accent1-interactive);
 			}
 
 			&:active {
-				background-color: transparentize(_palette(accent1), 0.9);
+				background-color: transparentize(_palette(accent1-interactive), 0.9);
 			}
 		}
 	}

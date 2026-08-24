@@ -83,7 +83,7 @@ test('dashboard has no dark-mode control or behavior', () => {
 test('dashboard button styles distinguish default, hover, and active states', () => {
   assert.match(dashboardStyles, /\.view-toggle button,[\s\S]*background: #ffffff;[\s\S]*color: #585858 !important;/);
   assert.match(dashboardStyles, /\.view-toggle button:hover,[\s\S]*background: #fde7ed;[\s\S]*color: #585858 !important;/);
-  assert.match(dashboardStyles, /\.view-toggle button\.active \{[\s\S]*background: #f2849e;[\s\S]*color: #ffffff !important;/);
+  assert.match(dashboardStyles, /\.view-toggle button\.active \{[\s\S]*background: #c13d5b;[\s\S]*color: #ffffff !important;/);
 });
 
 test('dashboard action controls and score summaries use deliberate shared grouping', () => {
