@@ -6,10 +6,12 @@ const loadingMessage = document.getElementById('loadingMessage');
 const countdown = document.getElementById('countdown');
 const pauseOverlay = document.getElementById('pauseOverlay');
 const pauseButton = document.getElementById('pauseButton');
-const soundToggle = document.getElementById('soundToggle');
 const howToPlayButton = document.getElementById('howToPlayButton');
 const howToPlayModal = document.getElementById('howToPlayModal');
 const closeHowToPlay = document.getElementById('closeHowToPlay');
+
+const INITIAL_STEP_DELAY_MS = 150;
+const MIN_STEP_DELAY_MS = 60;
 
 let tileSize = 20;
 let rows, cols;
@@ -21,25 +23,22 @@ let lives = 3;
 let dx = 0;
 let dy = 0;
 let gameState = 'ready';
-let speed = 150;
-let loopId;
+let stepDelayMs = INITIAL_STEP_DELAY_MS;
+let loopId = null;
 let lastRenderTime = 0;
 let touchStartX = 0;
 let touchStartY = 0;
 let isTouchActive = false;
 let isPaused = false;
-let isSoundEnabled = true;
 let countdownValue = 3;
-
-// Sound effects
-const sounds = {
-    eat: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU'),
-    gameOver: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU'),
-    move: new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YU')
-};
 
 // Show loading state
 loadingMessage.classList.remove('hidden');
+
+function setStartRestartButtonLabel(label) {
+    startRestartButton.textContent = label;
+    startRestartButton.setAttribute('aria-label', label);
+}
 
 function setup() {
     canvas.width = canvas.parentElement.clientWidth;
@@ -50,7 +49,7 @@ function setup() {
     document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('score').textContent = 'Score: 0';
     startRestartButton.classList.remove('hidden');
-    startRestartButton.textContent = 'Start Game';
+    setStartRestartButtonLabel('Start Game');
     gameOverMessage.classList.add('hidden');
     loadingMessage.classList.add('hidden');
     pauseButton.classList.add('hidden');
@@ -68,6 +67,7 @@ function init() {
     ];
     placeFood();
     score = 0;
+    stepDelayMs = INITIAL_STEP_DELAY_MS;
     dx = 1;
     dy = 0;
     document.getElementById('score').textContent = 'Score: ' + score;
@@ -75,6 +75,22 @@ function init() {
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     gameOverMessage.classList.add('hidden');
     pauseButton.classList.remove('hidden');
+}
+
+function requestGameStart() {
+    if (gameState !== 'ready' && gameState !== 'gameOver') return;
+
+    if (gameState === 'gameOver') {
+        lives = 3;
+        score = 0;
+        document.getElementById('lives').textContent = 'Lives: ' + lives;
+        document.getElementById('score').textContent = 'Score: ' + score;
+        gameOverMessage.classList.add('hidden');
+    }
+
+    gameState = 'countdown';
+    startRestartButton.classList.add('hidden');
+    startCountdown();
 }
 
 function startCountdown() {
@@ -94,13 +110,19 @@ function startCountdown() {
     }, 1000);
 }
 
+function scheduleGameLoop() {
+    if (loopId !== null) return;
+    loopId = requestAnimationFrame(gameLoop);
+}
+
 function gameLoop(currentTime) {
+    loopId = null;
     if (gameState !== 'playing' || isPaused) return;
     
-    window.requestAnimationFrame(gameLoop);
+    scheduleGameLoop();
     
-    const secondsSinceLastRender = (currentTime - lastRenderTime) / 1000;
-    if (secondsSinceLastRender < 1 / (1000 / speed)) return;
+    const millisecondsSinceLastRender = currentTime - lastRenderTime;
+    if (millisecondsSinceLastRender < stepDelayMs) return;
     
     lastRenderTime = currentTime;
     
@@ -112,20 +134,17 @@ function update() {
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     // wall collision
     if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
-        if (isSoundEnabled) sounds.gameOver.play();
         endGame();
         return;
     }
     snake.unshift(head);
     if (head.x === food.x && head.y === food.y) {
-        if (isSoundEnabled) sounds.eat.play();
         score++;
         document.getElementById('score').textContent = 'Score: ' + score;
         placeFood();
         // Increase speed slightly with each food collected
-        speed = Math.min(300, speed + 2);
+        stepDelayMs = Math.max(MIN_STEP_DELAY_MS, stepDelayMs - 2);
     } else {
-        if (isSoundEnabled) sounds.move.play();
         snake.pop();
     }
 }
@@ -196,12 +215,12 @@ function endGame() {
         document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     }
     if (lives > 0) {
-        startRestartButton.textContent = 'Continue';
+        setStartRestartButtonLabel('Continue');
         startRestartButton.classList.remove('hidden');
         gameState = 'ready';
     } else {
         gameOverMessage.classList.remove('hidden');
-        startRestartButton.textContent = 'Restart Game';
+        setStartRestartButtonLabel('Restart Game');
         startRestartButton.classList.remove('hidden');
         gameState = 'gameOver';
     }
@@ -216,8 +235,9 @@ function startGame() {
     pauseOverlay.classList.add('hidden');
     pauseButton.querySelector('.pause-icon').classList.remove('hidden');
     pauseButton.querySelector('.resume-icon').classList.add('hidden');
+    pauseButton.setAttribute('aria-label', 'Pause Game');
     lastRenderTime = performance.now();
-    requestAnimationFrame(gameLoop);
+    scheduleGameLoop();
 }
 
 function togglePause() {
@@ -226,34 +246,36 @@ function togglePause() {
     pauseOverlay.classList.toggle('hidden');
     pauseButton.querySelector('.pause-icon').classList.toggle('hidden');
     pauseButton.querySelector('.resume-icon').classList.toggle('hidden');
+    pauseButton.setAttribute('aria-label', isPaused ? 'Resume Game' : 'Pause Game');
     if (!isPaused) {
         lastRenderTime = performance.now();
-        requestAnimationFrame(gameLoop);
+        scheduleGameLoop();
     }
-}
-
-function toggleSound() {
-    isSoundEnabled = !isSoundEnabled;
-    soundToggle.querySelector('.sound-on').classList.toggle('hidden');
-    soundToggle.querySelector('.sound-off').classList.toggle('hidden');
 }
 
 // Keyboard controls
 window.addEventListener('keydown', e => {
+    if (e.key === 'p' || e.key === 'P') {
+        togglePause();
+        return;
+    }
+
+    if (e.key === ' ' && (gameState === 'ready' || gameState === 'gameOver' || gameState === 'countdown')) {
+        e.preventDefault();
+        requestGameStart();
+        return;
+    }
+
     if (gameState !== 'playing' || isPaused) return;
+
+    if (e.key.startsWith('Arrow')) {
+        e.preventDefault();
+    }
+
     if (e.key === 'ArrowUp') changeDirection(0, -1);
     if (e.key === 'ArrowDown') changeDirection(0, 1);
     if (e.key === 'ArrowLeft') changeDirection(-1, 0);
     if (e.key === 'ArrowRight') changeDirection(1, 0);
-    if (e.key === 'p' || e.key === 'P') togglePause();
-    if (e.key === 'm' || e.key === 'M') toggleSound();
-    if (e.key === ' ' && (gameState === 'ready' || gameState === 'gameOver')) {
-        if (gameState === 'gameOver') {
-            lives = 3;
-            score = 0;
-        }
-        startCountdown();
-    }
 });
 
 // Touch controls
@@ -298,18 +320,9 @@ document.getElementById('touchControls').addEventListener('click', e => {
     }
 });
 
-startRestartButton.addEventListener('click', () => {
-    if (gameState === 'ready') {
-        startCountdown();
-    } else if (gameState === 'gameOver') {
-        lives = 3;
-        score = 0;
-        startCountdown();
-    }
-});
+startRestartButton.addEventListener('click', requestGameStart);
 
 pauseButton.addEventListener('click', togglePause);
-soundToggle.addEventListener('click', toggleSound);
 
 // How to Play Modal
 howToPlayButton.addEventListener('click', () => {
@@ -355,4 +368,3 @@ window.addEventListener('resize', () => {
 window.addEventListener('load', () => {
     setup();
 });
-
