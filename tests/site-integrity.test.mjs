@@ -90,8 +90,16 @@ test('icon-only links provide explicit accessible names', () => {
     );
 
     for (const match of iconLinks) {
+      const className = match[1].match(/\bclass="([^"]*)"/)?.[1] ?? '';
+      if (/\bbutton\b/.test(className)) continue;
+
       const label = match[2].match(/<span class="label">([^<]+)<\/span>/)?.[1];
-      if (!label) continue;
+      const href = match[1].match(/\bhref="([^"]+)"/)?.[1] ?? 'unknown destination';
+
+      assert.ok(
+        label,
+        `${page} icon-only link to ${href} needs a hidden text label`,
+      );
 
       const accessibleName = match[1].match(/\baria-label="([^"]+)"/)?.[1];
       assert.equal(
