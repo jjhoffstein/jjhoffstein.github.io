@@ -162,6 +162,7 @@
 		}
 
 		#menu {
+			@include vendor('transition-delay', '0s');
 			@include vendor('transform', 'translateX(0)');
 			visibility: visible;
 

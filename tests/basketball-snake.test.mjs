@@ -396,3 +396,14 @@ test('food placement terminates on a full board and moving into a vacated tail i
   assert.equal(game.evaluate('lives'), 3);
   assert.equal(game.evaluate('snake[0].x'), 0);
 });
+
+test('inactive touch controls cannot intercept the mobile Start or Continue button', () => {
+  const game = createGameHarness();
+  game.load();
+  assert.equal(game.elements.touchControls.inert, true);
+  game.keydown(' ');
+  game.finishCountdown();
+  assert.equal(game.elements.touchControls.inert, false);
+  game.evaluate('endGame()');
+  assert.equal(game.elements.touchControls.inert, true);
+});

@@ -60,6 +60,7 @@ function resizeCanvas(preserveGrid = false) {
 
 function setup() {
     resizeCanvas();
+    touchControls.inert = true;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('score').textContent = 'Score: 0';
@@ -253,6 +254,7 @@ function finishBoard() {
     setStartRestartButtonLabel('Restart Game');
     startRestartButton.classList.remove('hidden');
     pauseButton.classList.add('hidden');
+    touchControls.inert = true;
 }
 
 function endGame() {
@@ -271,12 +273,14 @@ function endGame() {
         gameState = 'gameOver';
     }
     pauseButton.classList.add('hidden');
+    touchControls.inert = true;
 }
 
 function startGame() {
     init();
     gameState = 'playing';
     isPaused = false;
+    touchControls.inert = false;
     startRestartButton.classList.add('hidden');
     pauseOverlay.classList.add('hidden');
     pauseButton.querySelector('.pause-icon').classList.remove('hidden');
@@ -290,6 +294,7 @@ function startGame() {
 function togglePause() {
     if (gameState !== 'playing') return;
     isPaused = !isPaused;
+    touchControls.inert = isPaused;
     pauseOverlay.classList.toggle('hidden');
     pauseButton.querySelector('.pause-icon').classList.toggle('hidden');
     pauseButton.querySelector('.resume-icon').classList.toggle('hidden');
