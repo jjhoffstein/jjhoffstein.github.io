@@ -1,0 +1,11 @@
+exclude:
+  - tests
+  - README.txt
+  - README.md
+  - LICENSE.txt
+  - server.log
+  - node_modules
+  - tmp
+  - output
+  - package.json
+  - package-lock.json

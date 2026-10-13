@@ -1,0 +1,7 @@
+.DS_Store
+*.log
+_site/
+.jekyll-cache/
+node_modules/
+tmp/
+output/

@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,900");
 
 /*
 	Phantom by HTML5 UP
@@ -2329,6 +2328,7 @@ input, select, textarea {
 	}
 
 		.image img {
+			height: auto;
 			border-radius: 4px;
 			display: block;
 		}
@@ -2595,7 +2595,7 @@ input, select, textarea {
 		-webkit-flex-wrap: wrap;
 		-ms-flex-wrap: wrap;
 		flex-wrap: wrap;
-		postiion: relative;
+		position: relative;
 		margin: -2.5em 0 0 -2.5em;
 	}
 
@@ -2752,23 +2752,27 @@ input, select, textarea {
 				background-color: #8499e7;
 			}
 
-			body:not(.is-touch) .tiles article:hover > .image {
+			body:not(.is-touch) .tiles article:hover > .image,
+			body:not(.is-touch) .tiles article:focus-within > .image {
 				-moz-transform: scale(1.1);
 				-webkit-transform: scale(1.1);
 				-ms-transform: scale(1.1);
 				transform: scale(1.1);
 			}
 
-				body:not(.is-touch) .tiles article:hover > .image:before {
+				body:not(.is-touch) .tiles article:hover > .image:before,
+				body:not(.is-touch) .tiles article:focus-within > .image:before {
 					background-color: #333333;
 					opacity: 0.35;
 				}
 
-				body:not(.is-touch) .tiles article:hover > .image:after {
+				body:not(.is-touch) .tiles article:hover > .image:after,
+				body:not(.is-touch) .tiles article:focus-within > .image:after {
 					opacity: 0;
 				}
 
-			body:not(.is-touch) .tiles article:hover .content {
+			body:not(.is-touch) .tiles article:hover .content,
+			body:not(.is-touch) .tiles article:focus-within .content {
 				max-height: 15em;
 				opacity: 1;
 			}
@@ -2827,7 +2831,8 @@ input, select, textarea {
 					margin: 1.25em 0 0 1.25em;
 				}
 
-					.tiles article:hover > .image {
+					.tiles article:hover > .image,
+					.tiles article:focus-within > .image {
 						-moz-transform: scale(1.0);
 						-webkit-transform: scale(1.0);
 						-ms-transform: scale(1.0);
@@ -3000,10 +3005,10 @@ input, select, textarea {
 		-webkit-transform: translateX(22em);
 		-ms-transform: translateX(22em);
 		transform: translateX(22em);
-		-moz-transition: -moz-transform 0.45s ease, visibility 0.45s;
-		-webkit-transition: -webkit-transform 0.45s ease, visibility 0.45s;
-		-ms-transition: -ms-transform 0.45s ease, visibility 0.45s;
-		transition: transform 0.45s ease, visibility 0.45s;
+		-moz-transition: -moz-transform 0.45s ease, visibility 0s 0.45s;
+		-webkit-transition: -webkit-transform 0.45s ease, visibility 0s 0.45s;
+		-ms-transition: -ms-transform 0.45s ease, visibility 0s 0.45s;
+		transition: transform 0.45s ease, visibility 0s 0.45s;
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -3156,6 +3161,7 @@ input, select, textarea {
 	}
 
 	body.is-menu-visible #menu {
+		transition-delay: 0s;
 		-moz-transform: translateX(0);
 		-webkit-transform: translateX(0);
 		-ms-transform: translateX(0);
@@ -3354,3 +3360,31 @@ input, select, textarea {
 			}
 
 		}
+
+/* Preserve the tile palette while giving white text a dependable contrast surface. */
+.tiles article > a h2,
+.tiles article > a .content p {
+    background-color: rgba(0, 0, 0, 0.60);
+    box-shadow: 0 0 0 0.2em rgba(0, 0, 0, 0.60);
+    border-radius: 2px;
+}
+
+.tiles article > a:focus-visible {
+    outline: 3px solid #585858;
+    outline-offset: 3px;
+}
+
+/* Hidden controls must stay hidden even when a component sets display. */
+[hidden] { display: none !important; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+    body.is-preload .tiles article {
+        opacity: 1;
+        transform: none;
+    }
+}

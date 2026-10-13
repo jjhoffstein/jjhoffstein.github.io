@@ -1,0 +1,23 @@
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('../webfonts/source-sans-pro-300.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('../webfonts/source-sans-pro-700.woff2') format('woff2');
+}
+
+@font-face {
+	font-family: 'Source Sans Pro';
+	font-style: normal;
+	font-weight: 900;
+	font-display: swap;
+	src: url('../webfonts/source-sans-pro-900.woff2') format('woff2');
+}

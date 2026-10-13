@@ -13,7 +13,7 @@
 
 	#menu {
 		@include vendor('transform', 'translateX(#{_size(menu)})');
-		@include vendor('transition', ('transform #{_duration(menu)} ease', 'visibility #{_duration(menu)}'));
+		@include vendor('transition', ('transform #{_duration(menu)} ease', 'visibility 0s #{_duration(menu)}'));
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -162,6 +162,7 @@
 		}
 
 		#menu {
+			@include vendor('transition-delay', '0s');
 			@include vendor('transform', 'translateX(0)');
 			visibility: visible;
 

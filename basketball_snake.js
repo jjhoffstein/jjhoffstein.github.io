@@ -18,7 +18,13 @@ let rows, cols;
 let snake;
 let food;
 let score = 0;
-let highScore = parseInt(localStorage.getItem('basketballSnakeHighScore')) || 0;
+let highScore = 0;
+try {
+    const storedScore = Number(localStorage.getItem('basketballSnakeHighScore'));
+    if (Number.isSafeInteger(storedScore) && storedScore >= 0) highScore = storedScore;
+} catch (error) {
+    // Keep the game playable when browser storage is unavailable.
+}
 let lives = 3;
 let dx = 0;
 let dy = 0;
@@ -31,6 +37,8 @@ let touchStartY = 0;
 let isTouchActive = false;
 let isPaused = false;
 let countdownValue = 3;
+let directionChanged = false;
+let resumeAfterHelp = false;
 
 // Show loading state
 loadingMessage.classList.remove('hidden');
@@ -40,11 +48,19 @@ function setStartRestartButtonLabel(label) {
     startRestartButton.setAttribute('aria-label', label);
 }
 
-function setup() {
+function resizeCanvas(preserveGrid = false) {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.width;
-    rows = canvas.height / tileSize;
-    cols = canvas.width / tileSize;
+    if (!preserveGrid) {
+        // Every cell stays wholly inside the canvas, including narrow screens.
+        cols = rows = Math.max(5, Math.floor(canvas.width / 20));
+    }
+    tileSize = canvas.width / cols;
+}
+
+function setup() {
+    resizeCanvas();
+    touchControls.inert = true;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
     document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('score').textContent = 'Score: 0';
@@ -56,10 +72,7 @@ function setup() {
 }
 
 function init() {
-    canvas.width = canvas.parentElement.clientWidth;
-    canvas.height = canvas.width;
-    rows = canvas.height / tileSize;
-    cols = canvas.width / tileSize;
+    resizeCanvas();
     snake = [
         { x: Math.floor(cols / 2), y: Math.floor(rows / 2) },
         { x: Math.floor(cols / 2) - 1, y: Math.floor(rows / 2) },
@@ -70,6 +83,7 @@ function init() {
     stepDelayMs = INITIAL_STEP_DELAY_MS;
     dx = 1;
     dy = 0;
+    directionChanged = false;
     document.getElementById('score').textContent = 'Score: ' + score;
     document.getElementById('lives').textContent = 'Lives: ' + lives;
     document.getElementById('highScore').textContent = 'High Score: ' + highScore;
@@ -78,6 +92,7 @@ function init() {
 }
 
 function requestGameStart() {
+    if (SiteDialog.isOpen()) return;
     if (gameState !== 'ready' && gameState !== 'gameOver') return;
 
     if (gameState === 'gameOver') {
@@ -99,6 +114,7 @@ function startCountdown() {
     countdown.classList.remove('hidden');
     
     const countdownInterval = setInterval(() => {
+        if (SiteDialog.isOpen()) return;
         countdownValue--;
         if (countdownValue > 0) {
             countdown.textContent = countdownValue;
@@ -120,6 +136,10 @@ function gameLoop(currentTime) {
     if (gameState !== 'playing' || isPaused) return;
     
     scheduleGameLoop();
+    if (SiteDialog.isOpen()) {
+        lastRenderTime = currentTime;
+        return;
+    }
     
     const millisecondsSinceLastRender = currentTime - lastRenderTime;
     if (millisecondsSinceLastRender < stepDelayMs) return;
@@ -131,17 +151,23 @@ function gameLoop(currentTime) {
 }
 
 function update() {
+    directionChanged = false;
     const head = { x: snake[0].x + dx, y: snake[0].y + dy };
     // wall collision
-    if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows || snake.some(seg => seg.x === head.x && seg.y === head.y)) {
+    const eating = food && head.x === food.x && head.y === food.y;
+    const body = eating ? snake : snake.slice(0, -1);
+    if (head.x < 0 || head.y < 0 || head.x >= cols || head.y >= rows || body.some(seg => seg.x === head.x && seg.y === head.y)) {
         endGame();
         return;
     }
     snake.unshift(head);
-    if (head.x === food.x && head.y === food.y) {
+    if (eating) {
         score++;
         document.getElementById('score').textContent = 'Score: ' + score;
-        placeFood();
+        if (!placeFood()) {
+            finishBoard();
+            return;
+        }
         // Increase speed slightly with each food collected
         stepDelayMs = Math.max(MIN_STEP_DELAY_MS, stepDelayMs - 2);
     } else {
@@ -184,65 +210,91 @@ function draw() {
     ctx.shadowBlur = 15;
     ctx.fillStyle = '#f97316';
     ctx.beginPath();
-    ctx.arc(food.x * tileSize + tileSize / 2, food.y * tileSize + tileSize / 2, tileSize / 2 - 1, 0, Math.PI * 2);
-    ctx.fill();
+    if (food) {
+        ctx.arc(food.x * tileSize + tileSize / 2, food.y * tileSize + tileSize / 2, tileSize / 2 - 1, 0, Math.PI * 2);
+        ctx.fill();
+    }
     ctx.shadowBlur = 0;
 }
 
 function placeFood() {
-    food = {
-        x: Math.floor(Math.random() * cols),
-        y: Math.floor(Math.random() * rows)
-    };
-    // ensure not on snake
-    if (snake.some(seg => seg.x === food.x && seg.y === food.y)) {
-        placeFood();
+    const occupied = new Set(snake.map(seg => seg.y * cols + seg.x));
+    const available = [];
+    for (let cell = 0; cell < rows * cols; cell++) {
+        if (!occupied.has(cell)) available.push(cell);
     }
+    if (!available.length) { food = null; return false; }
+    const cell = available[Math.floor(Math.random() * available.length)];
+    food = { x: cell % cols, y: Math.floor(cell / cols) };
+    return true;
 }
 
 function changeDirection(newDx, newDy) {
+    if (directionChanged || SiteDialog.isOpen()) return;
     if (-newDx === dx && -newDy === dy) return; // prevent reverse
+    if (newDx === dx && newDy === dy) return;
     dx = newDx;
     dy = newDy;
+    directionChanged = true;
+}
+
+function updateHighScore() {
+    if (score <= highScore) return;
+    highScore = score;
+    try { localStorage.setItem('basketballSnakeHighScore', String(highScore)); }
+    catch (error) { /* The in-memory high score still works. */ }
+    document.getElementById('highScore').textContent = 'High Score: ' + highScore;
+}
+
+function finishBoard() {
+    updateHighScore();
+    gameState = 'gameOver';
+    gameOverMessage.textContent = 'You filled the court!';
+    gameOverMessage.classList.remove('hidden');
+    setStartRestartButtonLabel('Restart Game');
+    startRestartButton.classList.remove('hidden');
+    pauseButton.classList.add('hidden');
+    touchControls.inert = true;
 }
 
 function endGame() {
     lives--;
     document.getElementById('lives').textContent = 'Lives: ' + lives;
-    if (score > highScore) {
-        highScore = score;
-        localStorage.setItem('basketballSnakeHighScore', highScore);
-        document.getElementById('highScore').textContent = 'High Score: ' + highScore;
-    }
+    updateHighScore();
     if (lives > 0) {
         setStartRestartButtonLabel('Continue');
         startRestartButton.classList.remove('hidden');
         gameState = 'ready';
     } else {
+        gameOverMessage.textContent = 'Game Over!';
         gameOverMessage.classList.remove('hidden');
         setStartRestartButtonLabel('Restart Game');
         startRestartButton.classList.remove('hidden');
         gameState = 'gameOver';
     }
     pauseButton.classList.add('hidden');
+    touchControls.inert = true;
 }
 
 function startGame() {
     init();
     gameState = 'playing';
     isPaused = false;
+    touchControls.inert = false;
     startRestartButton.classList.add('hidden');
     pauseOverlay.classList.add('hidden');
     pauseButton.querySelector('.pause-icon').classList.remove('hidden');
     pauseButton.querySelector('.resume-icon').classList.add('hidden');
     pauseButton.setAttribute('aria-label', 'Pause Game');
     lastRenderTime = performance.now();
+    canvas.focus({ preventScroll: true });
     scheduleGameLoop();
 }
 
 function togglePause() {
     if (gameState !== 'playing') return;
     isPaused = !isPaused;
+    touchControls.inert = isPaused;
     pauseOverlay.classList.toggle('hidden');
     pauseButton.querySelector('.pause-icon').classList.toggle('hidden');
     pauseButton.querySelector('.resume-icon').classList.toggle('hidden');
@@ -255,6 +307,8 @@ function togglePause() {
 
 // Keyboard controls
 window.addEventListener('keydown', e => {
+    if (SiteDialog.isOpen() || e.target?.closest?.('a, input, select, textarea, [contenteditable="true"]')) return;
+    if (e.target?.closest?.('button') && (e.key === ' ' || e.key === 'Enter')) return;
     if (e.key === 'p' || e.key === 'P') {
         togglePause();
         return;
@@ -326,28 +380,27 @@ pauseButton.addEventListener('click', togglePause);
 
 // How to Play Modal
 howToPlayButton.addEventListener('click', () => {
+    resumeAfterHelp = gameState === 'playing' && !isPaused;
+    if (resumeAfterHelp) togglePause();
     howToPlayModal.style.display = 'flex';
     howToPlayModal.classList.remove('hidden');
+    SiteDialog.open(howToPlayModal, { onClose: closeHelp, initialFocus: closeHowToPlay, returnFocus: howToPlayButton });
 });
 
-closeHowToPlay.addEventListener('click', () => {
+function closeHelp() {
     howToPlayModal.style.display = 'none';
     howToPlayModal.classList.add('hidden');
-});
+    SiteDialog.close(howToPlayModal);
+    if (resumeAfterHelp && gameState === 'playing' && isPaused) togglePause();
+    resumeAfterHelp = false;
+}
+
+closeHowToPlay.addEventListener('click', closeHelp);
 
 // Close modal when clicking outside
 howToPlayModal.addEventListener('click', (e) => {
     if (e.target === howToPlayModal) {
-        howToPlayModal.style.display = 'none';
-        howToPlayModal.classList.add('hidden');
-    }
-});
-
-// Close modal with Escape key
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && howToPlayModal.style.display !== 'none') {
-        howToPlayModal.style.display = 'none';
-        howToPlayModal.classList.add('hidden');
+        closeHelp();
     }
 });
 
@@ -357,9 +410,10 @@ window.addEventListener('resize', () => {
     clearTimeout(resizeTimeout);
     resizeTimeout = setTimeout(() => {
         if (gameState === 'playing') {
-            init();
+            resizeCanvas(true);
+            draw();
         } else {
-            setup();
+            resizeCanvas();
         }
     }, 250);
 });

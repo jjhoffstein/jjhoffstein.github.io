@@ -35,6 +35,7 @@ function createElement({ classes = [], textContent = '' } = {}) {
   return {
     classList: createClassList(classes),
     dataset: {},
+    focus() {},
     parentElement: { clientWidth: 600 },
     style: {},
     textContent,
@@ -57,7 +58,7 @@ function createElement({ classes = [], textContent = '' } = {}) {
   };
 }
 
-function createGameHarness() {
+function createGameHarness({ storageThrows = false } = {}) {
   const pauseIcon = createElement();
   const resumeIcon = createElement({ classes: ['hidden'] });
 
@@ -130,11 +131,18 @@ function createGameHarness() {
         return elements[id];
       },
     },
+    SiteDialog: {
+      opened: false,
+      isOpen() { return this.opened; },
+      open() { this.opened = true; },
+      close() { this.opened = false; },
+    },
     localStorage: {
       getItem() {
+        if (storageThrows) throw new Error('Storage blocked');
         return null;
       },
-      setItem() {},
+      setItem() { if (storageThrows) throw new Error('Storage blocked'); },
     },
     performance: { now: () => 0 },
     requestAnimationFrame,
@@ -161,6 +169,10 @@ function createGameHarness() {
       countdownInterval.callback();
     },
     elements,
+    resize(width) {
+      elements.gameCanvas.parentElement.clientWidth = width;
+      for (const listener of windowListeners.get('resize') ?? []) listener();
+    },
     evaluate(expression) {
       return vm.runInContext(expression, context);
     },
@@ -296,4 +308,102 @@ test('visible game controls keep their accessible names in sync', () => {
 test('the page does not expose controls for unavailable sounds', () => {
   assert.doesNotMatch(pageSource, /id="soundToggle"|M - Toggle Sound/);
   assert.doesNotMatch(scriptSource, /data:audio\/wav|new Audio\(|toggleSound|soundToggle/);
+});
+
+test('only one direction change is accepted between movement ticks', () => {
+  const game = createGameHarness();
+  game.evaluate("init(); gameState = 'playing';");
+  game.keydown('ArrowUp');
+  game.keydown('ArrowLeft');
+  assert.equal(game.evaluate('dx'), 0);
+  assert.equal(game.evaluate('dy'), -1);
+  game.evaluate('update()');
+  assert.equal(game.evaluate('lives'), 3);
+  game.keydown('ArrowLeft');
+  assert.equal(game.evaluate('dx'), -1);
+});
+
+test('resizing an active run preserves the snake, food, score, lives and pause state', () => {
+  const game = createGameHarness();
+  game.evaluate("init(); gameState = 'playing'; score = 7; lives = 2; isPaused = true;");
+  const before = game.evaluate('JSON.stringify({snake, food, score, lives, isPaused, rows, cols})');
+  game.resize(350);
+  assert.equal(game.evaluate('JSON.stringify({snake, food, score, lives, isPaused, rows, cols})'), before);
+  assert.equal(game.elements.gameCanvas.width, 350);
+  assert.equal(game.evaluate('tileSize * cols'), 350);
+});
+
+test('narrow-screen grids have whole cells and food remains entirely in bounds', () => {
+  const game = createGameHarness();
+  game.resize(350);
+  game.evaluate('init()');
+  assert.equal(game.evaluate('cols'), 17);
+  assert.equal(game.evaluate('rows'), 17);
+  assert.ok(game.evaluate('(food.x + 1) * tileSize <= canvas.width'));
+  assert.ok(game.evaluate('(food.y + 1) * tileSize <= canvas.height'));
+});
+
+test('Help blocks game shortcuts and preserves a manually paused game', () => {
+  const game = createGameHarness();
+  game.elements.howToPlayButton.dispatch('click');
+  game.keydown(' ');
+  assert.equal(game.evaluate('gameState'), 'ready');
+  assert.equal(game.intervalRecords.length, 0);
+  game.elements.closeHowToPlay.dispatch('click');
+  game.evaluate("init(); gameState = 'playing'; isPaused = true;");
+  game.elements.howToPlayButton.dispatch('click');
+  game.keydown('p');
+  game.elements.closeHowToPlay.dispatch('click');
+  assert.equal(game.evaluate('isPaused'), true);
+});
+
+test('Help pauses and then resumes an active run', () => {
+  const game = createGameHarness();
+  game.evaluate("init(); gameState = 'playing'; isPaused = false;");
+  game.elements.howToPlayButton.dispatch('click');
+  assert.equal(game.evaluate('isPaused'), true);
+  game.elements.closeHowToPlay.dispatch('click');
+  assert.equal(game.evaluate('isPaused'), false);
+});
+
+test('a shared overlay freezes the board and suspends the countdown', () => {
+  const game = createGameHarness();
+  game.keydown(' ');
+  game.evaluate('SiteDialog.opened = true');
+  game.intervalRecords[0].callback();
+  assert.equal(game.evaluate('countdownValue'), 3);
+  game.evaluate('SiteDialog.opened = false');
+  game.finishCountdown();
+  const head = game.evaluate('JSON.stringify(snake[0])');
+  game.evaluate('SiteDialog.opened = true; gameLoop(1000)');
+  assert.equal(game.evaluate('JSON.stringify(snake[0])'), head);
+});
+
+test('storage failures do not stop initialization or ending a game', () => {
+  const game = createGameHarness({ storageThrows: true });
+  game.load();
+  game.evaluate("init(); score = 5; gameState = 'playing'; endGame();");
+  assert.equal(game.evaluate('highScore'), 5);
+  assert.equal(game.evaluate('gameState'), 'ready');
+  assert.equal(game.elements.highScore.textContent, 'High Score: 5');
+});
+
+test('food placement terminates on a full board and moving into a vacated tail is legal', () => {
+  const game = createGameHarness();
+  game.evaluate('rows = cols = 1; snake = [{x:0,y:0}];');
+  assert.equal(game.evaluate('placeFood()'), false);
+  game.evaluate("rows = cols = 3; snake = [{x:1,y:1},{x:1,y:0},{x:0,y:0},{x:0,y:1}]; food = {x:2,y:2}; dx = -1; dy = 0; gameState = 'playing'; update();");
+  assert.equal(game.evaluate('lives'), 3);
+  assert.equal(game.evaluate('snake[0].x'), 0);
+});
+
+test('inactive touch controls cannot intercept the mobile Start or Continue button', () => {
+  const game = createGameHarness();
+  game.load();
+  assert.equal(game.elements.touchControls.inert, true);
+  game.keydown(' ');
+  game.finishCountdown();
+  assert.equal(game.elements.touchControls.inert, false);
+  game.evaluate('endGame()');
+  assert.equal(game.elements.touchControls.inert, true);
 });

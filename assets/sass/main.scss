@@ -4,8 +4,8 @@
 @import 'libs/vendor';
 @import 'libs/breakpoints';
 @import 'libs/html-grid';
-@import 'fontawesome-all.min.css';
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,700,900');
+// Fonts and icons are linked directly in each page to avoid an import waterfall.
+@import 'fonts';
 
 /*
 	Phantom by HTML5 UP
@@ -52,3 +52,5 @@
 	@import 'layout/main';
 	@import 'layout/footer';
 	@import 'layout/wrapper';
+// Apply after component preload rules.
+@import 'base/reduced-motion';
