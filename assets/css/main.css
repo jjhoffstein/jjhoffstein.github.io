@@ -3005,10 +3005,10 @@ input, select, textarea {
 		-webkit-transform: translateX(22em);
 		-ms-transform: translateX(22em);
 		transform: translateX(22em);
-		-moz-transition: -moz-transform 0.45s ease, visibility 0.45s;
-		-webkit-transition: -webkit-transform 0.45s ease, visibility 0.45s;
-		-ms-transition: -ms-transform 0.45s ease, visibility 0.45s;
-		transition: transform 0.45s ease, visibility 0.45s;
+		-moz-transition: -moz-transform 0.45s ease, visibility 0s 0.45s;
+		-webkit-transition: -webkit-transform 0.45s ease, visibility 0s 0.45s;
+		-ms-transition: -ms-transform 0.45s ease, visibility 0s 0.45s;
+		transition: transform 0.45s ease, visibility 0s 0.45s;
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -3161,6 +3161,7 @@ input, select, textarea {
 	}
 
 	body.is-menu-visible #menu {
+		transition-delay: 0s;
 		-moz-transform: translateX(0);
 		-webkit-transform: translateX(0);
 		-ms-transform: translateX(0);

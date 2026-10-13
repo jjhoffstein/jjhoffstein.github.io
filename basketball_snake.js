@@ -302,7 +302,8 @@ function togglePause() {
 
 // Keyboard controls
 window.addEventListener('keydown', e => {
-    if (SiteDialog.isOpen() || e.target?.closest?.('a, button, input, select, textarea, [contenteditable="true"]')) return;
+    if (SiteDialog.isOpen() || e.target?.closest?.('a, input, select, textarea, [contenteditable="true"]')) return;
+    if (e.target?.closest?.('button') && (e.key === ' ' || e.key === 'Enter')) return;
     if (e.key === 'p' || e.key === 'P') {
         togglePause();
         return;

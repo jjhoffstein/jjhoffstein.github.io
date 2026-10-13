@@ -35,7 +35,7 @@ function createDialogHarness() {
   const disabled = element('disabled', modal, true); disabled.disabled = true;
   const hidden = element('hidden', modal, true); hidden.visible = false;
   const last = element('last', modal, true);
-  const window = {};
+  const window = { requestAnimationFrame(callback) { callback(); } };
   vm.runInNewContext(source, { document, window });
   trigger.focus();
   let closes = 0;

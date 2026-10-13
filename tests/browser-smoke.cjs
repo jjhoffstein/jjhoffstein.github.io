@@ -27,6 +27,7 @@ const mime = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jp
    await page.goto('https://portfolio.test/'+file,{waitUntil:'load'});
    await page.waitForFunction(()=>!document.body.classList.contains('is-preload'));
    await page.evaluate(()=>document.fonts.ready);
+   await page.waitForFunction(()=>[...document.querySelectorAll('.tiles article, .card .score')].every(element=>Number(getComputedStyle(element).opacity)>=0.999));
    const info=await page.evaluate(()=>({width:innerWidth,scrollWidth:document.documentElement.scrollWidth,title:document.title,brokenImages:[...document.images].filter(i=>!i.loading||i.loading!=='lazy').filter(i=>!i.complete||!i.naturalWidth).map(i=>i.src),font:getComputedStyle(document.querySelector('h1')).fontFamily}));
    assert.ok(info.scrollWidth<=info.width+1,`${mode}/${file} overflows: ${info.scrollWidth}/${info.width}`);
    assert.equal(info.brokenImages.length,0,`${mode}/${file} has broken images`);
@@ -37,6 +38,7 @@ const mime = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jp
   await page.goto('https://portfolio.test/');
   await page.waitForFunction(()=>!document.body.classList.contains('is-preload'));
   await page.getByRole('link',{name:'Menu',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('#menu').contains(document.activeElement));
   assert.equal(await page.evaluate(()=>document.querySelector('#wrapper').inert),true);
   assert.equal(await page.evaluate(()=>document.activeElement.textContent.trim()),'Home');
   await page.keyboard.press('Shift+Tab');
@@ -66,6 +68,7 @@ const mime = {'.html':'text/html','.css':'text/css','.js':'text/javascript','.jp
   await page.getByRole('button',{name:'📊 Cost Breakdown',exact:true}).first().click();
   await page.waitForFunction(()=>document.querySelector('#costModal').getAttribute('aria-hidden')==='false');
   assert.equal(await page.locator('#costModal canvas').evaluate(canvas=>canvas.width>0&&canvas.height>0),true);
+  assert.equal(await page.evaluate(()=>Boolean(Chart.getChart(document.querySelector('#costChart')))),true);
   await page.keyboard.press('Escape');
   await page.getByRole('button',{name:'Kanban',exact:true}).click();
   await page.locator('.kanban-card').first().focus();

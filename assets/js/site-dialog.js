@@ -48,6 +48,10 @@
         }
         active = state;
         focusFirst();
+        // CSS visibility transitions can reject focus until the next frame.
+        window.requestAnimationFrame(function () {
+            if (active === state && !element.contains(document.activeElement)) focusFirst();
+        });
     }
 
     function close(element) {
