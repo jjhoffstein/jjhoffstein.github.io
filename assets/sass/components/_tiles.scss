@@ -13,7 +13,7 @@
 
 		@include vendor('display', 'flex');
 		@include vendor('flex-wrap', 'wrap');
-		postiion: relative;
+		position: relative;
 		margin: ($gutter * -1) 0 0 ($gutter * -1);
 
 		article {
@@ -163,7 +163,7 @@
 			}
 
 			body:not(.is-touch) & {
-				&:hover {
+				&:hover, &:focus-within {
 					> .image {
 						@include vendor('transform', 'scale(1.1)');
 
@@ -236,7 +236,7 @@
 				width: calc(#{(100% / 2)} - #{$gutter * 1});
 				margin: $gutter 0 0 $gutter;
 
-				&:hover {
+				&:hover, &:focus-within {
 					> .image {
 						@include vendor('transform', 'scale(1.0)');
 					}
@@ -256,3 +256,14 @@
 		}
 	}
 
+
+.tiles article > a h2,
+.tiles article > a .content p {
+    background-color: rgba(0, 0, 0, 0.60);
+    box-shadow: 0 0 0 0.2em rgba(0, 0, 0, 0.60);
+    border-radius: 2px;
+}
+.tiles article > a:focus-visible {
+    outline: 3px solid #585858;
+    outline-offset: 3px;
+}

@@ -93,6 +93,7 @@ test('indexable project pages use Digital Portfolio branding', () => {
     'basketball_snake.html',
     'basketball_analytics.html',
     'alpha-site-scorer.html',
+    'future-signal.html',
   ];
 
   for (const pageName of projectPages) {
@@ -384,4 +385,78 @@ test('all root-relative local asset references resolve', () => {
       assert.ok(existsSync(resolve(rootPath, path)), `${pages[index]} references missing ${reference}`);
     }
   }
+});
+
+test('tile text remains readable over even the lightest possible image', () => {
+  const backing = mainStyles.match(/\.tiles article > a \.content p\s*\{[^}]*background-color:\s*rgba\(0,\s*0,\s*0,\s*([\d.]+)\)/);
+  assert.ok(backing, 'tile headings and descriptions need a contrast backing');
+  const alpha = Number(backing[1]);
+  const lightestSurface = [255, 255, 255].map(channel => channel * (1 - alpha));
+  assert.ok(contrastRatio([255, 255, 255], lightestSurface) >= 4.5);
+  assert.match(mainStyles, /\.tiles article:focus-within \.content\s*\{[^}]*opacity: 1/);
+});
+
+test('shared overlays load their keyboard helper before the scripts that use it', () => {
+  for (const [name, contents] of [
+    ...pages.map((page, index) => [page, pageContents[index]]),
+    ['alpha-site-scorer/index.html', readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8')],
+  ]) {
+    if (name === 'menu.html') continue;
+    const helper = contents.indexOf('assets/js/site-dialog.js');
+    assert.ok(helper > 0, `${name} is missing the overlay helper`);
+    assert.ok(helper < contents.indexOf('assets/js/main.js'), `${name} loads the helper too late`);
+    if (name === 'alpha-site-scorer/index.html') {
+      assert.ok(helper < contents.indexOf('assets/js/alpha-site-scorer.js'));
+    }
+  }
+});
+
+test('public images reserve their real aspect ratio and primary images remain eager', () => {
+  for (const [name, contents] of [
+    ...pages.map((page, index) => [page, pageContents[index]]),
+    ['alpha-site-scorer/index.html', readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8')],
+  ]) {
+    for (const match of contents.matchAll(/<img\b[^>]*>/g)) {
+      assert.match(match[0], /\bwidth="\d+"/, `${name} image needs a width`);
+      assert.match(match[0], /\bheight="\d+"/, `${name} image needs a height`);
+    }
+  }
+  const future = pageContents[pages.indexOf('future-signal.html')];
+  const hero = future.match(/<img[^>]*qimono-virus-1812092.jpg[^>]*>/)?.[0];
+  assert.ok(hero);
+  assert.doesNotMatch(hero, /loading="lazy"/);
+});
+
+test('the custom 404 works from nested missing paths and remains unindexed', () => {
+  const page = readFileSync(new URL('../404.html', import.meta.url), 'utf8');
+  assert.match(page, /data-menu-src="\/menu.html"/);
+  assert.match(page, /name="robots" content="noindex, follow"/);
+  for (const match of page.matchAll(/(?:src|href)="([^"]+)"/g)) {
+    if (/^(?:https?:|mailto:|#)/.test(match[1])) continue;
+    assert.ok(match[1].startsWith('/'), `404 uses a relative URL: ${match[1]}`);
+  }
+});
+
+test('fonts load directly from the site and small shared assets stay small', () => {
+  const fontCss = readFileSync(new URL('../assets/css/fonts.css', import.meta.url), 'utf8');
+  assert.doesNotMatch(mainStyles, /fonts.googleapis.com|fonts.gstatic.com/);
+  assert.doesNotMatch(mainStyles, /@import/);
+  assert.equal((fontCss.match(/font-display:\s*swap/g) ?? []).length, 3);
+  for (const match of fontCss.matchAll(/url\('([^']+)'\)/g)) {
+    assert.ok(existsSync(resolve(rootPath, 'assets/css', match[1])));
+  }
+  assert.ok(readFileSync(new URL('../images/globe-64.jpg', import.meta.url)).length < 10_000);
+  for (const family of ['brands-400', 'solid-900']) {
+    assert.ok(readFileSync(new URL(`../assets/webfonts/portfolio-fa-${family}.woff2`, import.meta.url)).length < 10_000);
+  }
+});
+
+test('the shared menu can use normal caching and dependencies are pinned', () => {
+  const menuScript = readFileSync(new URL('../assets/js/main.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(menuScript, /Date.now\(\)/);
+  const jquery = readFileSync(new URL('../assets/js/jquery.min.js', import.meta.url), 'utf8');
+  assert.match(jquery.slice(0, 200), /jQuery v3\.7\.1/);
+  assert.match(jquery, /\.ajax=/);
+  const dashboard = readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8');
+  assert.match(dashboard, /chart.js@4\.5\.1\/dist\/chart.umd.min.js/);
 });

@@ -2,7 +2,9 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import test from 'node:test';
 
-const page = readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8');
+const markup = readFileSync(new URL('../alpha-site-scorer/index.html', import.meta.url), 'utf8');
+const application = readFileSync(new URL('../assets/js/alpha-site-scorer.js', import.meta.url), 'utf8');
+const page = markup + '\n' + application;
 const menuScript = readFileSync(new URL('../assets/js/main.js', import.meta.url), 'utf8');
 const menu = readFileSync(new URL('../menu.html', import.meta.url), 'utf8');
 const dashboardStyles = readFileSync(new URL('../assets/css/alpha-site-scorer.css', import.meta.url), 'utf8');
@@ -54,11 +56,8 @@ test('Alpha Site Scorer escapes imported text at every HTML-string sink', () => 
 });
 
 test('Alpha Site Scorer application script compiles', () => {
-  const inlineScripts = [...page.matchAll(/<script>([\s\S]*?)<\/script>/g)].map((match) => match[1]);
-  const applicationScript = inlineScripts.find((script) => script.includes('const demoSites='));
-
-  assert.ok(applicationScript, 'the dashboard application script should be present');
-  assert.doesNotThrow(() => new Function(applicationScript));
+  assert.match(markup, /src="\.\.\/assets\/js\/alpha-site-scorer\.js" defer/);
+  assert.doesNotThrow(() => new Function(application));
 });
 
 test('shared menu loader honors a nested-page menu path and menu links work from nested pages', () => {
@@ -87,8 +86,8 @@ test('dashboard button styles distinguish default, hover, and active states', ()
 });
 
 test('dashboard action controls and score summaries use deliberate shared grouping', () => {
-  assert.match(page, /<div class="action-controls">[\s\S]*<button class="btn btn-secondary" onclick="exportSites\(\)">Export<\/button>[\s\S]*<label class="btn btn-secondary">Import/);
-  assert.match(page, /<div class="score-summary"><div class="score">\$\{r\.total\.toFixed\(1\)\}<span>\/100<\/span><\/div><div class="score-bar">/);
+  assert.match(page, /<div class="action-controls">[\s\S]*<button class="btn btn-secondary" onclick="exportSites\(\)">Export<\/button>[\s\S]*<button class="btn btn-secondary"[^>]*>Import/);
+  assert.match(page, /<div class="score-summary"><div class="score">\$\{r\.total\.toFixed\(1\)\}<span>\/\$\{MAX_SITE_SCORE\}<\/span><\/div><div class="score-bar">/);
   assert.match(dashboardStyles, /\.action-controls \.btn \{[\s\S]*display: inline-flex;/);
   assert.match(dashboardStyles, /\.score-summary \{[\s\S]*margin: 1em 0 0\.75em;/);
 });
@@ -135,6 +134,8 @@ test('a stale Alpha delete action cannot remove another site', () => {
     let sites=state.sites;
     let editingIndex=state.editingIndex;
     let writes=0;
+    let editingDraft=null;
+    const SiteDialog={close(){}};
     const document={getElementById:()=>({classList:{remove(){}}})};
     const confirm=()=>true;
     const commitSites=(nextSites)=>{writes+=1;sites=nextSites;return true;};

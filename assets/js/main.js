@@ -41,8 +41,7 @@
 
 				if ($this.parent().hasClass('textarea-wrapper')) return;
 
-				var $wrapper = $('<div class="textarea-wrapper"></div>'),
-					$submits = $this.find('input[type="submit"]');
+				var $wrapper = $('<div class="textarea-wrapper"></div>');
 
 				$this
 					.wrap($wrapper)
@@ -63,7 +62,7 @@
 
 					})
 					.on('blur focus', function() {
-						$this.val($.trim($this.val()));
+						$this.val(String($this.val()).trim());
 					})
 					.on('input blur focus --init', function() {
 
@@ -103,43 +102,30 @@
 			$menu.wrapInner('<div class="inner"></div>');
 		}
 
-		$menu._locked = false;
+        var $menuTriggers = $('a[href="#menu"]'),
+            menuDelay = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 350;
+        $menu.attr({ 'aria-hidden': 'true', 'tabindex': '-1' }).prop('inert', true);
+        $menuTriggers.attr({ 'aria-controls': 'menu', 'aria-expanded': 'false', 'aria-haspopup': 'dialog' });
 
-		$menu._lock = function() {
+        $menu._show = function() {
+            if ($body.hasClass('is-menu-visible')) return;
+            $body.addClass('is-menu-visible');
+            $menuTriggers.attr('aria-expanded', 'true');
+            SiteDialog.open($menu[0], { onClose: $menu._hide, returnFocus: $menuTriggers[0] });
+            loadMenu();
+        };
 
-			if ($menu._locked)
-				return false;
+        $menu._hide = function() {
+            if (!$body.hasClass('is-menu-visible')) return;
+            $body.removeClass('is-menu-visible');
+            $menuTriggers.attr('aria-expanded', 'false');
+            SiteDialog.close($menu[0]);
+        };
 
-			$menu._locked = true;
-
-			window.setTimeout(function() {
-				$menu._locked = false;
-			}, 350);
-
-			return true;
-
-		};
-
-		$menu._show = function() {
-
-			if ($menu._lock())
-				$body.addClass('is-menu-visible');
-
-		};
-
-		$menu._hide = function() {
-
-			if ($menu._lock())
-				$body.removeClass('is-menu-visible');
-
-		};
-
-		$menu._toggle = function() {
-
-			if ($menu._lock())
-				$body.toggleClass('is-menu-visible');
-
-		};
+        $menu._toggle = function() {
+            if ($body.hasClass('is-menu-visible')) $menu._hide();
+            else $menu._show();
+        };
 
 		$menu
 			.appendTo($body)
@@ -149,6 +135,7 @@
 			.on('click', 'a', function(event) {
 
 				var href = $(this).attr('href');
+                if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
 
 				event.preventDefault();
 				event.stopPropagation();
@@ -162,7 +149,7 @@
 
 					window.setTimeout(function() {
 						window.location.href = href;
-					}, 350);
+					}, menuDelay);
 
 			})
 			.append('<a class="close" href="#menu">Close</a>');
@@ -194,22 +181,24 @@
 	// Function to load the menu
 	function loadMenu() {
 		// Check if #menu exists and if it hasn't been loaded already
-		if ($menu.length && !$menu.data('loaded')) {
+		if ($menu.length && !$menu.data('loaded') && !$menu.data('loading')) {
+            $menu.data('loading', true);
 			// Ensure the inner wrapper exists so we don't clobber it during load
 			if (!$menu.children('.inner').length) {
 				$menu.wrapInner('<div class="inner"></div>');
 			}
-			var cacheBuster = 'v=' + Date.now(),
-				menuSource = $menu.attr('data-menu-src') || 'menu.html';
-			$menu.children('.inner').load(menuSource + '?' + cacheBuster, function(response, status, xhr) {
+			var menuSource = $menu.attr('data-menu-src') || 'menu.html';
+            // A stable URL lets the browser revalidate the shared menu normally.
+			$menu.children('.inner').load(menuSource, function(response, status, xhr) {
+                $menu.data('loading', false);
 				if (status == "error") {
-					console.log("Error loading " + menuSource + ": " + xhr.status + " " + xhr.statusText);
+					$menu.children('.inner').html('<p role="status">The menu could not be loaded. <a href="/index.html">Return home</a>.</p>');
 				} else {
 					// Mark as loaded to prevent multiple loads if script is run again
 					$menu.data('loaded', true);
 					// Re-initialize menu scripts if they depend on dynamic content
 					initForms($menu);
-					console.log("Menu loaded successfully.");
+
 					$menu.trigger('menu_loaded');
 				}
 			});
